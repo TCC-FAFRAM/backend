@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "es6",
+    "moduleResolution": "node",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,      // Adicionado para suportar importação de arquivos JSON
+    "isolatedModules": true,        // Útil em ambientes com transpilers como Babel
+    "noImplicitAny": false          // Caso queira permitir algum tipo 'any' implícito
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}

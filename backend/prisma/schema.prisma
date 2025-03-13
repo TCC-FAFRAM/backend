@@ -1,0 +1,140 @@
+generator client {
+  provider = "prisma-client-js"
+
+}
+
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+enum Role {
+  USER    // Usuario 
+  ADMIN   // ADMIN
+  MASTER  // MASTER
+}
+
+model Usuario {
+  id_usuario   Int    @id @default(autoincrement())
+  nome         String
+  email        String @unique
+  senha        String
+  tipo     Role    @default(USER)
+  data_cadastro DateTime @default(now())
+
+  Certificados     Certificado[]
+  TentativasProva  TentativasProva[]
+  CursosConcluidos CursosConcluidos[]
+  LiberacoesCursoFuncionario LiberacaoCurso[] @relation(name: "FuncionarioLiberacao")
+  LiberacoesCursoAdmin       LiberacaoCurso[] @relation(name: "AdminLiberacao")
+  UsuarioFuncao    UsuarioFuncao[]
+}
+model Funcao {
+  id_funcao Int    @id @default(autoincrement())
+  nome      String
+
+  UsuarioFuncao UsuarioFuncao[]
+  FuncaoCurso   FuncaoCurso[]
+}
+
+model UsuarioFuncao {
+  fk_id_usuario Int
+  fk_id_funcao  Int
+
+  Usuario Usuario @relation(fields: [fk_id_usuario], references: [id_usuario])
+  Funcao  Funcao  @relation(fields: [fk_id_funcao], references: [id_funcao])
+
+  @@id([fk_id_usuario, fk_id_funcao])
+}
+
+model Curso {
+  id_curso  Int    @id @default(autoincrement())
+  titulo    String
+  descricao String
+
+  Aulas        Aula[]
+  Prova        Prova?
+  Certificados Certificado[]
+  FuncaoCurso  FuncaoCurso[]
+  LiberacoesCurso LiberacaoCurso[] @relation(name: "CursoLiberacao")
+}
+
+model FuncaoCurso {
+  fk_id_funcao Int
+  fk_id_curso  Int
+
+  Funcao Funcao @relation(fields: [fk_id_funcao], references: [id_funcao])
+  Curso  Curso  @relation(fields: [fk_id_curso], references: [id_curso])
+
+  @@id([fk_id_funcao, fk_id_curso])
+}
+
+model Aula {
+  id_aula  Int    @id @default(autoincrement())
+  titulo   String
+  url_video String
+  duracao  Int
+  fk_id_curso Int
+
+  Curso Curso @relation(fields: [fk_id_curso], references: [id_curso])
+
+  CursosConcluidos CursosConcluidos[]
+}
+
+model CursosConcluidos {
+  id_concluidos Int @id @default(autoincrement())
+  fk_id_usuario Int
+  fk_id_aula    Int
+  completado_em DateTime @default(now())
+
+  Usuario Usuario @relation(fields: [fk_id_usuario], references: [id_usuario])
+  Aula    Aula    @relation(fields: [fk_id_aula], references: [id_aula])
+}
+
+model Certificado {
+  id_certificado Int    @id @default(autoincrement())
+  fk_id_usuario  Int
+  fk_id_curso    Int
+  data_emissao   DateTime @default(now())
+  url_certificado String
+
+  Usuario Usuario @relation(fields: [fk_id_usuario], references: [id_usuario])
+  Curso   Curso   @relation(fields: [fk_id_curso], references: [id_curso])
+}
+
+model Prova {
+  id_prova        Int @id @default(autoincrement())
+  fk_id_curso     Int @unique
+  nota_minima     Float
+  total_perguntas Int
+
+  Curso Curso @relation(fields: [fk_id_curso], references: [id_curso])
+  TentativasProva TentativasProva[]
+}
+
+
+model TentativasProva {
+  id_tentativa_prova Int @id @default(autoincrement())
+  fk_id_funcionario  Int
+  fk_id_prova        Int
+  nota              Float
+  data_tentativa    DateTime @default(now())
+  passou            Boolean
+
+  Usuario Usuario @relation(fields: [fk_id_funcionario], references: [id_usuario])
+  Prova   Prova   @relation(fields: [fk_id_prova], references: [id_prova])
+}
+
+model LiberacaoCurso {
+  id_liberacao_curso Int @id @default(autoincrement())
+  fk_id_funcionario  Int
+  fk_id_curso        Int
+  fk_id_admin        Int
+  data_liberacao     DateTime @default(now())
+
+  Funcionario Usuario @relation(name: "FuncionarioLiberacao", fields: [fk_id_funcionario], references: [id_usuario])
+  Curso       Curso   @relation(name: "CursoLiberacao", fields: [fk_id_curso], references: [id_curso])
+  Admin       Usuario @relation(name: "AdminLiberacao", fields: [fk_id_admin], references: [id_usuario])
+}

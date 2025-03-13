@@ -1,0 +1,37 @@
+# Node.js
+node_modules/
+
+# Diretórios de build (Node.js e Flutter)
+dist/
+build/
+
+# Flutter build
+/build/
+ios/Flutter/.symlinks/
+ios/Podfile.lock
+android/.gradle/
+android/app/build/
+
+# Dependências do npm
+package-lock.json
+yarn.lock
+
+# Ambiente de desenvolvimento
+.env
+
+# Arquivos de configuração do editor
+.vscode/
+.idea/
+
+# Arquivos de log
+*.log
+
+# Arquivos temporários
+*.tmp
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos do Prisma
+.prisma/
