@@ -1,0 +1,5 @@
+# igonre node_modules
+\node_modules
+
+# ignore only the .env  them keep .env-example
+.env
