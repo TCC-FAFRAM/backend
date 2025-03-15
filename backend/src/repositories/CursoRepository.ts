@@ -62,4 +62,35 @@ export class CursoRepository {
       throw error;
     }
   }
+
+  // ✅ Obter cursos de acordo com o email do usuário
+  static async getCursosByEmail(email: string): Promise<Curso[]> {
+    try {
+      const usuario = await prisma.usuario.findUnique({
+        where: { email },
+        include: { LiberacoesCursoFuncionario: true }, // Traz as liberações de curso do usuário
+      });
+
+      if (!usuario) {
+        throw new Error('Usuário não encontrado');
+      }
+
+      return await prisma.curso.findMany({
+        where: {
+          LiberacoesCurso: {
+            some: {
+              fk_id_funcionario: usuario.id_usuario, // Verifica se há liberação para este usuário
+            },
+          },
+        },
+        include: {
+          Aulas: true, // Inclui as aulas associadas ao curso
+          Prova: true, // Inclui a prova associada ao curso, se houver
+        },
+      });
+    } catch (error) {
+      console.error('Erro ao obter cursos do usuário pelo email:', error);
+      throw error;
+    }
+  }
 }
