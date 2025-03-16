@@ -48,7 +48,7 @@ model User {
 ## 📦 3. Criando o Banco de Dados e as Tabelas
 Execute os comandos abaixo para criar as tabelas no banco:
 ```bash
-npx prisma migrate dev --name init
+npm run migrate:new nome-da-migration
 ```
 
 Para gerar o **Prisma Client** (necessário para consultas):
