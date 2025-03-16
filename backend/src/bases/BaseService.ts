@@ -1,4 +1,4 @@
-import { IBaseRepo } from "./BaseRepository";
+import { IBaseRepository } from "./BaseRepository";
 
 export interface IBaseService<TypeData> {
   getAll(): Promise<TypeData[]>;
@@ -10,9 +10,9 @@ export interface IBaseService<TypeData> {
 
 export abstract class BaseService<TypeData> implements IBaseService<TypeData>{
   
-  protected readonly repository: IBaseRepo<TypeData>;
+  protected readonly repository: IBaseRepository<TypeData>;
 
-  constructor(repository: IBaseRepo<TypeData>) {
+  constructor(repository: IBaseRepository<TypeData>) {
     this.repository = repository;
   }
 

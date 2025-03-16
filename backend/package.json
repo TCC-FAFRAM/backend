@@ -6,7 +6,8 @@
     "migrate:new": "npx prisma migrate dev --name",
     "migrate:reset": "npx prisma migrate reset",
     "migrate:push": "npx prisma db push",
-    "migrate:pull": "npx prisma db pull"
+    "migrate:pull": "npx prisma db pull",
+    "test": "vitest"
   },
   "devDependencies": {
     "@prisma/client": "^6.4.1",
@@ -17,6 +18,7 @@
     "@types/node": "^22.13.9",
     "cors": "^2.8.5",
     "express": "^4.21.2",
+    "supertest": "^7.0.0",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.8.2",

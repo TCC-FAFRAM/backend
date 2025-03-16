@@ -1,7 +1,7 @@
 import { Usuario } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { UserService } from '../entities/User/UserService';
+import { UserService } from '../User/UserService';
 
 class AuthService {
   static async login(email: string, password: string): Promise<{ user: Usuario; token: string; refreshToken: string }> {
