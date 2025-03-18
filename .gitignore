@@ -33,6 +33,4 @@ yarn.lock
 .DS_Store
 Thumbs.db
 
-# Arquivos do Prisma
-.prisma/
-.prisma/migrations
+backend/.env
