@@ -16,6 +16,8 @@ android/app/build/
 package-lock.json
 yarn.lock
 
+
+
 # Ambiente de desenvolvimento
 .env
 
@@ -33,4 +35,5 @@ yarn.lock
 .DS_Store
 Thumbs.db
 
+backend/.env
 backend/.env
