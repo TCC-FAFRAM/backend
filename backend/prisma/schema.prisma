@@ -156,3 +156,14 @@ model LiberacaoCurso {
   Curso       Curso   @relation(name: "CursoLiberacao", fields: [fk_id_curso], references: [id_curso])
   Admin       Usuario @relation(name: "AdminLiberacao", fields: [fk_id_admin], references: [id_usuario])
 }
+
+model Log {
+  // tabela de log
+  id_log       Int      @id @default(autoincrement())
+  tabela       String   // Nome da tabela afetada (Usuario, Funcao, Curso)
+  operacao     String   // CREATE, UPDATE ou DELETE
+  id_registro  Int      // ID do registro afetado
+  dados_antigos Json?   // Dados antigos (para UPDATE e DELETE)
+  dados_novos  Json?    // Dados novos (para CREATE e UPDATE)
+  data_registro DateTime @default(now()) // Data da ação
+}
