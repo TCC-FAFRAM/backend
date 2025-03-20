@@ -26,6 +26,9 @@ model Usuario {
 
   // Para usuarios do tipo USER, esses campos sao obrigatorios.
   // Para ADMIN e MASTER, poderao ser nulos.
+  fk_id_funcao Int?
+  Funcao       Funcao?  @relation(fields: [fk_id_funcao], references: [id_funcao])
+  
   fk_id_fazenda Int?     
   Fazenda       Fazenda? @relation(fields: [fk_id_fazenda], references: [id_fazenda])
 
@@ -35,7 +38,6 @@ model Usuario {
   CursosConcluidos CursosConcluidos[]
   LiberacoesCursoFuncionario LiberacaoCurso[] @relation(name: "FuncionarioLiberacao")
   LiberacoesCursoAdmin       LiberacaoCurso[] @relation(name: "AdminLiberacao")
-  UsuarioFuncao    UsuarioFuncao[]
 }
 
 model Fazenda {
@@ -51,19 +53,9 @@ model Funcao {
   id_funcao Int    @id @default(autoincrement())
   nome      String
 
-  UsuarioFuncao UsuarioFuncao[]
-  FuncaoCurso   FuncaoCurso[]
-}
+  Usuarios Usuario[] // Relacao 1:N, uma funcao pode ter varios usuarios
 
-model UsuarioFuncao {
-  // Valido somente para USER, ADMIN e MASTER nao terao funcao
-  fk_id_usuario Int
-  fk_id_funcao  Int
-
-  Usuario Usuario @relation(fields: [fk_id_usuario], references: [id_usuario])
-  Funcao  Funcao  @relation(fields: [fk_id_funcao], references: [id_funcao])
-
-  @@id([fk_id_usuario, fk_id_funcao])
+  FuncaoCurso FuncaoCurso[] // Relacao N:N, muitas funções podem ter muitos cursos
 }
 
 model Curso {
