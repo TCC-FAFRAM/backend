@@ -35,4 +35,4 @@ Thumbs.db
 
 # Arquivos do Prisma
 .prisma/
-.prisma/migrations
+.prisma/migrations/
