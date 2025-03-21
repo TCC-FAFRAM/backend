@@ -170,7 +170,6 @@ model LiberacaoCurso {
 }
 
 model Log {
-  // tabela de log
   id_log       Int      @id @default(autoincrement())
   tabela       String   // Nome da tabela afetada (Usuario, Funcao, Curso)
   operacao     String   // CREATE, UPDATE ou DELETE
