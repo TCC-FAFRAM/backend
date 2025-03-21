@@ -49,8 +49,14 @@ model Usuario {
 model Fazenda {
   id_fazenda   Int    @id @default(autoincrement())
   nome         String
-  localizacao  String
+  proprietario String?
   descricao    String?
+
+  // Campos de endereço (baseados na API de localidades do IBGE)
+  distrito_id       Int?         
+  municipio_id      Int?         
+  complemento       String?
+
 
   Usuarios Usuario[] // Relacionamento 1:N (Uma fazenda pode ter vários funcionários)
 }
