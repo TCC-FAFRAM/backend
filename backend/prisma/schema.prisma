@@ -21,6 +21,7 @@ model Usuario {
   nome          String
   email         String   @unique
   senha         String
+  cpf           String   @unique 
   tipo          Role     @default(USER)
   data_cadastro DateTime @default(now())
 
@@ -31,6 +32,11 @@ model Usuario {
   
   fk_id_fazenda Int?     
   Fazenda       Fazenda? @relation(fields: [fk_id_fazenda], references: [id_fazenda])
+
+  // Campos de endereço (baseados na API de localidades do IBGE)
+  distrito_id       Int?         
+  municipio_id      Int?         
+  complemento       String?
 
   // Outras relacoes...
   Certificados     Certificado[]

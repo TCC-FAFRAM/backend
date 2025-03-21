@@ -1,3 +1,5 @@
+-- NAO ESTA PRONTO
+
 -- funcao da trigger de log
 CREATE OR REPLACE FUNCTION log_trigger() RETURNS TRIGGER AS $$
 BEGIN
@@ -18,11 +20,12 @@ $$ LANGUAGE plpgsql;
 DO $$ 
 DECLARE r RECORD;
 BEGIN
-  FOR r IN SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename IN ('Usuario', 'Funcao', 'Curso') LOOP
-    EXECUTE format('DROP TRIGGER IF EXISTS log_trigger ON %s', r.tablename);
+  FOR r IN SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename IN ('usuario', 'funcao', 'curso') LOOP
+    EXECUTE format('DROP TRIGGER IF EXISTS log_trigger ON "%s"', r.tablename);
     EXECUTE format(
-      'CREATE TRIGGER log_trigger AFTER INSERT OR UPDATE OR DELETE ON %s FOR EACH ROW EXECUTE FUNCTION log_trigger()',
+      'CREATE TRIGGER log_trigger AFTER INSERT OR UPDATE OR DELETE ON "%s" FOR EACH ROW EXECUTE FUNCTION log_trigger()',
       r.tablename
     );
   END LOOP;
 END $$;
+

@@ -3,7 +3,8 @@
     "dev": "ts-node-dev --respawn --transpile-only server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "migrate": "npx prisma migrate dev && psql $DATABASE_URL -f prisma/sql/trigger_log.sql"
+    "__comment2__": "MIGRATE NÃO ESTA PRONTO",
+    "migrate": "npx prisma migrate dev && psql -h 127.0.0.1 -U postgres -f prisma/sql/trigger_log.sql"
   },
   "devDependencies": {
     "@prisma/client": "^6.4.1",
