@@ -1,9 +1,7 @@
--- Criar a função de log
-CREATE OR REPLACE FUNCTION log_trigger()
-RETURNS TRIGGER AS $$
-DECLARE
-    chave_primaria TEXT;
-    id_registro_valor INT;
+-- NAO ESTA PRONTO
+
+-- funcao da trigger de log
+CREATE OR REPLACE FUNCTION log_trigger() RETURNS TRIGGER AS $$
 BEGIN
     -- Identificar a chave primária dinamicamente
     SELECT a.attname INTO chave_primaria
@@ -33,8 +31,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
--- cria triiger de log de usuario, funcao e curso
+-- triggers para as tabelas Usuario, Funcao e Curso
+-- cria novas triggers e apaga as antigas se existir
 DO $$ 
 DECLARE r RECORD;
 BEGIN
