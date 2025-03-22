@@ -1,5 +1,5 @@
 # Node.js
-node_modules/
+backend/node_modules
 
 # Diretórios de build (Node.js e Flutter)
 dist/
@@ -34,5 +34,4 @@ yarn.lock
 Thumbs.db
 
 # Arquivos do Prisma
-.prisma/
-.prisma/migrations
+backend/prisma/migrations
