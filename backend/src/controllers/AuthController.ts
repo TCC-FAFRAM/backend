@@ -49,7 +49,9 @@ class AuthController {
         id: user.id_usuario,
         name: user.nome,
         email: user.email,
-        tipo: user.tipo
+        tipo: user.tipo,
+        cpf:  user.cpf,
+        complemento: user.complemento,
       });
     } catch (error) {
       res.status(400).json({ error: (error as Error).message });

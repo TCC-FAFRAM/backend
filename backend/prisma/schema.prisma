@@ -19,6 +19,7 @@ enum Role {
 model Usuario {
   id_usuario    Int      @id @default(autoincrement())
   nome          String
+  sobre_nome    String
   email         String   @unique
   senha         String
   cpf           String   @unique 
