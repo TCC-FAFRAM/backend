@@ -12,12 +12,12 @@ class AuthService {
     }
 
     const secret = process.env.JWT_SECRET as string;
-    const expiresInValue = '1h';  // Expiração curta para o access token
-    const refreshTokenExpiresIn = '7d';  // Expiração longa para o refresh token
+    const expiresInValue = '1h';  
+    const refreshTokenExpiresIn = '7d';
 
     // Gera o access token
     const accessToken = jwt.sign(
-      { nome: user.nome, data: user.data_cadastro },
+      { nome: `${user.nome} ${user.sobre_nome}`, email: user.email, role: user.tipo },
       secret,
       { expiresIn: expiresInValue }
     );
