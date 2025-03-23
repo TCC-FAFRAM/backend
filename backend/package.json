@@ -3,11 +3,7 @@
     "dev": "ts-node-dev --respawn --transpile-only server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "migrate:new": "npx prisma migrate dev --name",
-    "migrate:reset": "npx prisma migrate reset",
-    "migrate:push": "npx prisma db push",
-    "migrate:pull": "npx prisma db pull",
-    "test": "vitest"
+    "migrate": "npx prisma migrate dev && psql -h 127.0.0.1 -U postgres -d platform_education -f prisma/sql/trigger_log.sql"
   },
   "devDependencies": {
     "@prisma/client": "^6.4.1",

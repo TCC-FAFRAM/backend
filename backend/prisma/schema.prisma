@@ -17,36 +17,57 @@ enum Role {
 }
 
 model Usuario {
-  id_usuario   Int    @id @default(autoincrement())
-  nome         String
-  email        String @unique
-  senha        String
-  tipo     Role    @default(USER)
+  id_usuario    Int      @id @default(autoincrement())
+  nome          String
+  email         String   @unique
+  senha         String
+  cpf           String   @unique 
+  tipo          Role     @default(USER)
   data_cadastro DateTime @default(now())
 
+  // Para usuarios do tipo USER, esses campos sao obrigatorios.
+  // Para ADMIN e MASTER, poderao ser nulos.
+  fk_id_funcao Int?
+  Funcao       Funcao?  @relation(fields: [fk_id_funcao], references: [id_funcao])
+  
+  fk_id_fazenda Int?     
+  Fazenda       Fazenda? @relation(fields: [fk_id_fazenda], references: [id_fazenda])
+
+  // Campos de endereço (baseados na API de localidades do IBGE)
+  distrito_id       Int?         
+  municipio_id      Int?         
+  complemento       String?
+
+  // Outras relacoes...
   Certificados     Certificado[]
   TentativasProva  TentativasProva[]
   CursosConcluidos CursosConcluidos[]
   LiberacoesCursoFuncionario LiberacaoCurso[] @relation(name: "FuncionarioLiberacao")
   LiberacoesCursoAdmin       LiberacaoCurso[] @relation(name: "AdminLiberacao")
-  UsuarioFuncao    UsuarioFuncao[]
 }
+
+model Fazenda {
+  id_fazenda   Int    @id @default(autoincrement())
+  nome         String
+  proprietario String?
+  descricao    String?
+
+  // Campos de endereço (baseados na API de localidades do IBGE)
+  distrito_id       Int?         
+  municipio_id      Int?         
+  complemento       String?
+
+
+  Usuarios Usuario[] // Relacionamento 1:N (Uma fazenda pode ter vários funcionários)
+}
+
 model Funcao {
   id_funcao Int    @id @default(autoincrement())
   nome      String
 
-  UsuarioFuncao UsuarioFuncao[]
-  FuncaoCurso   FuncaoCurso[]
-}
+  Usuarios Usuario[] // Relacao 1:N, uma funcao pode ter varios usuarios
 
-model UsuarioFuncao {
-  fk_id_usuario Int
-  fk_id_funcao  Int
-
-  Usuario Usuario @relation(fields: [fk_id_usuario], references: [id_usuario])
-  Funcao  Funcao  @relation(fields: [fk_id_funcao], references: [id_funcao])
-
-  @@id([fk_id_usuario, fk_id_funcao])
+  FuncaoCurso FuncaoCurso[] // Relacao N:N, muitas funções podem ter muitos cursos
 }
 
 model Curso {
@@ -94,14 +115,23 @@ model CursosConcluidos {
 }
 
 model Certificado {
-  id_certificado Int    @id @default(autoincrement())
-  fk_id_usuario  Int
-  fk_id_curso    Int
-  data_emissao   DateTime @default(now())
-  url_certificado String
+  id_certificado   Int    @id @default(autoincrement())
+  fk_id_usuario    Int
+  fk_id_curso      Int
+  data_emissao     DateTime @default(now())
+  url_certificado  String
+  status          StatusCertificado @default(INATIVO) 
 
   Usuario Usuario @relation(fields: [fk_id_usuario], references: [id_usuario])
   Curso   Curso   @relation(fields: [fk_id_curso], references: [id_curso])
+}
+
+enum StatusCertificado {
+  INATIVO       //nao concluiu o curso
+  SOLICITADO    //concluiu o curso e foi enviado para o admin 
+  GERADO        //foi aceito pelo admin, gerado e foi mandando para assinatura do admin
+  APROVADO      //foi assinado pelo admin e foi enviado para a entidade certificadora (CREA)
+  RECEBIDO      //foi assinado pela entidade certificadora (CREA) e esta disponivel para o usuario
 }
 
 model Prova {
@@ -137,4 +167,14 @@ model LiberacaoCurso {
   Funcionario Usuario @relation(name: "FuncionarioLiberacao", fields: [fk_id_funcionario], references: [id_usuario])
   Curso       Curso   @relation(name: "CursoLiberacao", fields: [fk_id_curso], references: [id_curso])
   Admin       Usuario @relation(name: "AdminLiberacao", fields: [fk_id_admin], references: [id_usuario])
+}
+
+model Log {
+  id_log       Int      @id @default(autoincrement())
+  tabela       String   // Nome da tabela afetada (Usuario, Funcao, Curso)
+  operacao     String   // CREATE, UPDATE ou DELETE
+  id_registro  Int      // ID do registro afetado
+  dados_antigos Json?   // Dados antigos (para UPDATE e DELETE)
+  dados_novos  Json?    // Dados novos (para CREATE e UPDATE)
+  data_registro DateTime @default(now()) // Data da ação
 }
