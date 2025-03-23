@@ -6,18 +6,17 @@ import { UsuarioService } from './UsuarioService';
 class AuthService {
   static async login(email: string, password: string): Promise<{ user: Usuario; token: string; refreshToken: string }> {
     const user =  await new UsuarioService().findByEmail(email);
-    console.log(user)
     if (!user || !(await bcrypt.compare(password, user.senha))) {
       throw new Error('Credenciais inválidas');
     }
 
     const secret = process.env.JWT_SECRET as string;
-    const expiresInValue = '1h';  // Expiração curta para o access token
+    const expiresInValue = '1d';  // Expiração curta para o access token
     const refreshTokenExpiresIn = '7d';  // Expiração longa para o refresh token
 
     // Gera o access token
     const accessToken = jwt.sign(
-      { nome: user.nome, data: user.data_cadastro },
+      { nome: user.nome, data: user.data_cadastro, role: user.tipo },
       secret,
       { expiresIn: expiresInValue }
     );
