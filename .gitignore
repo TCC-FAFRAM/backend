@@ -16,6 +16,8 @@ android/app/build/
 package-lock.json
 yarn.lock
 
+
+
 # Ambiente de desenvolvimento
 .env
 
@@ -33,5 +35,10 @@ yarn.lock
 .DS_Store
 Thumbs.db
 
+<<<<<<< HEAD
+backend/.env
+backend/.env
+=======
 # Arquivos do Prisma
 backend/prisma/migrations
+>>>>>>> 5b574d55ae35ea6782eeb0ba1102c1d0f4d72f3a
