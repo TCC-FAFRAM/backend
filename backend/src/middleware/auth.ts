@@ -35,7 +35,7 @@ export const auth = (req: Request, res: Response, next: NextFunction): void => {
 // Middleware de autorização para administradores
 export const adminOnly = (req: Request, res: Response, next: NextFunction): void => {
   if (req.user?.role !== 'ADMIN') {
-    res.status(403).json({ error: 'Acesso restrito a administradores' });
+    res.status(403).json({ error: 'Acesso restrito a (MASTER)' });
     return; // Retorna antes de continuar
   }
   next(); // Chama o próximo middleware
@@ -45,7 +45,7 @@ export const adminOnly = (req: Request, res: Response, next: NextFunction): void
 // Middleware de autorização para MASTER
 export const masterOnly = (req: Request, res: Response, next: NextFunction): void => {
   if (req.user?.role !== 'MASTER') {
-    res.status(403).json({ error: 'Acesso restrito a administradores' });
+    res.status(403).json({ error: 'Não Verificado' });
     return; // Retorna antes de continuar
   }
   next(); // Chama o próximo middleware
