@@ -1,9 +1,14 @@
 import { IBaseRepository } from "./BaseRepository";
 
+// BaseService.ts
 export interface IBaseService<TypeData> {
-  getAll(): Promise<TypeData[]>;
-  create(data: any): Promise<void>;
-  getById(id: number): Promise<TypeData | null>;
+  getAll(params?: {
+    take?: number;
+    skip?: number;
+    search?: string;
+    searchFields?: string[];
+  }): Promise<TypeData[]>;
+  create(data: any): Promise<TypeData>;
   update(id: number, data: any): Promise<TypeData>;
   delete(id: number): Promise<TypeData>;
 }
@@ -16,9 +21,11 @@ export abstract class BaseService<TypeData> implements IBaseService<TypeData>{
     this.repository = repository;
   }
 
-  async getAll(): Promise<TypeData[]> {
-    return this.repository.getAllItems();
+
+  async getAll(params?: any): Promise<TypeData[]> {
+    return await this.repository.getAllItems(params);
   }
+  
 
   async create(data: any): Promise<any> {
     return await this.repository.createItem(data);

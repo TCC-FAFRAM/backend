@@ -26,4 +26,4 @@ router.use('/usuariofuncao', UsuarioFuncaoRouter);
 router.use('/usuario', UsuarioRouter);
 
 
-export default router;
+export default router;  

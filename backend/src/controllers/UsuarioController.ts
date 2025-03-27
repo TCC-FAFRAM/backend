@@ -8,4 +8,8 @@ export class UsuarioController extends BaseController<Usuario> implements IUsuar
   constructor() {
     super(new UsuarioService());
   }
+
+  protected getSearchFields(): string[] {
+    return ['nome', 'email']; 
+  }
 }

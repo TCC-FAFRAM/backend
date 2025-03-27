@@ -15,7 +15,6 @@ export abstract class BaseController<TypeData> implements IBaseController {
   constructor(baseService: IBaseService<TypeData>) {
     this.baseService = baseService;
 
-    
     this.getAll = this.getAll.bind(this);
     this.create = this.create.bind(this);
     this.update = this.update.bind(this);
@@ -24,11 +23,29 @@ export abstract class BaseController<TypeData> implements IBaseController {
 
   async getAll(req: Request, res: Response): Promise<void> {
     try {
-      const result = await this.baseService.getAll();
-      res.json(result);
-    } catch (error) {
-      res.status(500).json({ error: (error as Error).message });
+      const take = req.query.take ? parseInt(req.query.take as string) : undefined;
+      const skip = req.query.skip ? parseInt(req.query.skip as string) : undefined;
+      const search = req.query.search?.toString();
+  
+      const searchFields = this.getSearchFields();
+  
+      const data = await this.baseService.getAll({
+        take,
+        skip,
+        search,
+        searchFields
+      });
+  
+      res.status(200).json(data); // <-- sem return
+    } catch (error: any) {
+      res.status(500).json({ error: error.message }); // <-- sem return
     }
+  }
+  
+
+  // Método sobrescrevível por controllers concretos
+  protected getSearchFields(): string[] {
+    return []; // Por padrão nenhum campo é pesquisado
   }
 
   async create(req: Request, res: Response): Promise<void> {

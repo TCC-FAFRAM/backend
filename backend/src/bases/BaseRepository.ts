@@ -27,14 +27,37 @@ export abstract class BaseRepository<TypeData> implements IBaseRepository<TypeDa
     }
   }
 
-  async getAllItems(params?: Prisma.Args<typeof this.model, 'findMany'>): Promise<TypeData[]> {
+  async getAllItems(params?: {
+    take?: number,
+    skip?: number,
+    search?: string,
+    searchFields?: string[]
+  }): Promise<TypeData[]> {
     try {
-      return await this.model.findMany();
+      const { take, skip, search, searchFields } = params || {};
+  
+      const where = search && searchFields?.length
+        ? {
+            OR: searchFields.map((field) => ({
+              [field]: {
+                contains: search,
+                mode: 'insensitive',
+              },
+            })),
+          }
+        : {};
+  
+      return await this.model.findMany({
+        take,
+        skip,
+        where,
+      });
     } catch (error) {
       console.error(`Error on getAll ${this.model}`, error);
       throw error;
     }
   }
+  
 
   async getItemById(id: number): Promise<TypeData | null> {
     try {
