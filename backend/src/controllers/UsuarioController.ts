@@ -1,15 +1,25 @@
 import { Usuario } from "@prisma/client";
-import { BaseController, IBaseController } from "../bases/BaseController";
+import { BaseController } from "../bases/BaseController";
 import { UsuarioService } from "../services/UsuarioService";
 
-interface IUsuarioController extends IBaseController {}
-
-export class UsuarioController extends BaseController<Usuario> implements IUsuarioController{
+export class UsuarioController extends BaseController<Usuario> {
   constructor() {
     super(new UsuarioService());
   }
 
   protected getSearchFields(): string[] {
-    return ['nome', 'email']; 
+    return ["nome", "email"];
+  }
+
+  protected getInclude(): any {
+    return {
+      Funcao: true,
+      Fazenda: true,
+      Certificados: true,
+      TentativasProva: true,
+      CursosConcluidos: true,
+      LiberacoesCursoFuncionario: true,
+      LiberacoesCursoAdmin: true,
+    };
   }
 }

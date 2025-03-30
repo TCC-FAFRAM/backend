@@ -9,7 +9,8 @@ const prisma = new PrismaClient();
 
 export class UsuarioRepository extends BaseRepository<Usuario> implements IUsuarioRepository {
   constructor() {
-    super(prisma, prisma.usuario);
+    super(prisma, prisma.usuario, 'id_usuario'); 
+    ;
   }
 
   async findByEmail(email: string): Promise<Usuario | null> {

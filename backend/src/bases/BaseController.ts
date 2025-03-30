@@ -15,10 +15,21 @@ export abstract class BaseController<TypeData> implements IBaseController {
   constructor(baseService: IBaseService<TypeData>) {
     this.baseService = baseService;
 
+    // 🔁 Mantendo o bind de todos os métodos
     this.getAll = this.getAll.bind(this);
     this.create = this.create.bind(this);
     this.update = this.update.bind(this);
     this.delete = this.delete.bind(this);
+  }
+
+  // 🆕 Pode ser sobrescrito em controllers concretos
+  protected getSearchFields(): string[] {
+    return [];
+  }
+
+  // 🆕 Pode ser sobrescrito para retornar include do Prisma
+  protected getInclude(): any {
+    return undefined;
   }
 
   async getAll(req: Request, res: Response): Promise<void> {
@@ -26,26 +37,22 @@ export abstract class BaseController<TypeData> implements IBaseController {
       const take = req.query.take ? parseInt(req.query.take as string) : undefined;
       const skip = req.query.skip ? parseInt(req.query.skip as string) : undefined;
       const search = req.query.search?.toString();
-  
+
       const searchFields = this.getSearchFields();
-  
+      const include = this.getInclude();
+
       const data = await this.baseService.getAll({
         take,
         skip,
         search,
-        searchFields
+        searchFields,
+        include
       });
-  
-      res.status(200).json(data); // <-- sem return
-    } catch (error: any) {
-      res.status(500).json({ error: error.message }); // <-- sem return
-    }
-  }
-  
 
-  // Método sobrescrevível por controllers concretos
-  protected getSearchFields(): string[] {
-    return []; // Por padrão nenhum campo é pesquisado
+      res.status(200).json(data);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
   }
 
   async create(req: Request, res: Response): Promise<void> {

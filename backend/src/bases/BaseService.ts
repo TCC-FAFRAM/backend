@@ -1,42 +1,52 @@
+// BaseService.ts
 import { IBaseRepository } from "./BaseRepository";
 
-// BaseService.ts
+// Resultado paginado genérico
+export interface PagedResult<T> {
+  data: T[];
+  total: number;
+}
+
+// BaseService interface
 export interface IBaseService<TypeData> {
   getAll(params?: {
     take?: number;
     skip?: number;
     search?: string;
     searchFields?: string[];
-  }): Promise<TypeData[]>;
+    include?: any; // Novo parâmetro
+  }): Promise<PagedResult<TypeData>>;
+
+  getById(id: number, include?: any): Promise<TypeData | null>;
+
   create(data: any): Promise<TypeData>;
   update(id: number, data: any): Promise<TypeData>;
   delete(id: number): Promise<TypeData>;
 }
 
-export abstract class BaseService<TypeData> implements IBaseService<TypeData>{
-  
+
+// BaseService abstrato
+export abstract class BaseService<TypeData> implements IBaseService<TypeData> {
   protected readonly repository: IBaseRepository<TypeData>;
 
   constructor(repository: IBaseRepository<TypeData>) {
     this.repository = repository;
   }
 
-
-  async getAll(params?: any): Promise<TypeData[]> {
+  async getAll(params?: any): Promise<PagedResult<TypeData>> {
     return await this.repository.getAllItems(params);
-  }
-  
-
-  async create(data: any): Promise<any> {
-    return await this.repository.createItem(data);
   }
 
   async getById(id: number): Promise<TypeData | null> {
     const result = await this.repository.getItemById(id);
     if (!result) {
-      throw new Error('Error on List by id');
+      throw new Error("Error on List by id");
     }
     return result;
+  }
+
+  async create(data: any): Promise<TypeData> {
+    return await this.repository.createItem(data);
   }
 
   async update(id: number, data: any): Promise<TypeData> {

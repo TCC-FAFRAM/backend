@@ -123,7 +123,7 @@ model Certificado {
   url_certificado  String
   status          StatusCertificado @default(INATIVO) 
 
-  Usuario Usuario @relation(fields: [fk_id_usuario], references: [id_usuario])
+  Usuario Usuario @relation(fields: [fk_id_usuario], references: [id_usuario], onDelete: Cascade)
   Curso   Curso   @relation(fields: [fk_id_curso], references: [id_curso])
 }
 
