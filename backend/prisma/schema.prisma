@@ -67,7 +67,6 @@ model Funcao {
   nome      String
 
   Usuarios Usuario[] // Relacao 1:N, uma funcao pode ter varios usuarios
-
   FuncaoCurso FuncaoCurso[] // Relacao N:N, muitas funções podem ter muitos cursos
 }
 

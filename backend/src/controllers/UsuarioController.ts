@@ -20,6 +20,7 @@ export class UsuarioController extends BaseController<Usuario> {
       CursosConcluidos: true,
       LiberacoesCursoFuncionario: true,
       LiberacoesCursoAdmin: true,
+
     };
   }
 }

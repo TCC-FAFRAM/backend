@@ -1,12 +1,13 @@
-import { PrismaClient, UsuarioFuncao } from "@prisma/client";
+import { PrismaClient, Funcao } from "@prisma/client";
 import { BaseRepository, IBaseRepository } from "../bases/BaseRepository";
 
-interface IUsuarioFuncaoRepository extends IBaseRepository<UsuarioFuncao> {}
+interface IUsuarioFuncaoRepository extends IBaseRepository<Funcao> {}
 
 const prisma = new PrismaClient();
 
-export class UsuarioFuncaoRepository extends BaseRepository<UsuarioFuncao> implements IUsuarioFuncaoRepository {
+export class UsuarioFuncaoRepository extends BaseRepository<Funcao> implements IUsuarioFuncaoRepository {
   constructor() {
-    super(prisma, prisma.usuarioFuncao);
+    super(prisma, prisma.usuario, 'id_funcao'); 
+    
   }
 }

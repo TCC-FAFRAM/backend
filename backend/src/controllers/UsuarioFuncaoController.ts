@@ -1,11 +1,21 @@
-import { UsuarioFuncao } from "@prisma/client";
+import { Funcao } from "@prisma/client";
 import { BaseController, IBaseController } from "../bases/BaseController";
 import { UsuarioFuncaoService } from "../services/UsuarioFuncaoService";
 
-interface IUsuarioFuncaoController extends IBaseController {}
 
-export class UsuarioFuncaoController extends BaseController<UsuarioFuncao> implements IUsuarioFuncaoController{
+export class UsuarioFuncaoController extends BaseController<Funcao> {
   constructor() {
     super(new UsuarioFuncaoService());
+  }
+
+  protected getSearchFields(): string[] {
+    return ["nome"];
+  }
+
+  protected getInclude(): any {
+    return {
+      Usuarios: true,
+      FuncaoCurso: true
+    };
   }
 }

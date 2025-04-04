@@ -4,7 +4,7 @@ import { TentativasProvaService } from "../services/TentativasProvaService";
 
 interface ITentativasProvaController extends IBaseController {}
 
-export class TentativasProvaController extends BaseController<TentativasProva> implements ITentativasProvaController{
+export class TentativasProvaController extends BaseController<TentativasProva> implements ITentativasProvaController {
   constructor() {
     super(new TentativasProvaService());
   }

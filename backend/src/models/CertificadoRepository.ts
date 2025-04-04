@@ -7,6 +7,6 @@ const prisma = new PrismaClient();
 
 export class CertificadoRepository extends BaseRepository<Certificado> implements ICertificadoRepository {
   constructor() {
-    super(prisma, prisma.certificado);
+    super(prisma, prisma.certificado,'id_certificado' );
   }
 }

@@ -8,4 +8,17 @@ export class CertificadoController extends BaseController<Certificado> implement
   constructor() {
     super(new CertificadoService());
   }
+
+  protected getSearchFields(): string[] {
+    return ["status"];
+  }
+
+  protected getInclude(): any {
+    return {
+     Usuario: true,
+     Curso: true
+
+    };
+  }
+
 }
