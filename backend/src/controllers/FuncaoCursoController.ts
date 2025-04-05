@@ -8,4 +8,14 @@ export class FuncaoCursoController extends BaseController<FuncaoCurso> implement
   constructor() {
     super(new FuncaoCursoService());
   }
+
+  protected getSearchFields(): string[] {
+    return ["nota_minima"];
+  }
+
+  protected getInclude(): any {
+    return {
+       Curso: true
+    };
+  }
 }

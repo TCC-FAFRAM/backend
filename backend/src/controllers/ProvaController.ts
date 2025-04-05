@@ -8,4 +8,14 @@ export class ProvaController extends BaseController<Prova> implements IProvaCont
   constructor() {
     super(new ProvaService());
   }
+
+  protected getSearchFields(): string[] {
+    return ["nota_minima", "total_perguntas"];
+  }
+
+  protected getInclude(): any {
+    return {
+      Curso: true,
+    };
+  }
 }

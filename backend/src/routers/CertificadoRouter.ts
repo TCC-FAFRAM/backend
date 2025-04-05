@@ -9,7 +9,7 @@ CertificadoRouter
   .get('/', auth, adminOnly, certificadoController.getAll)
   //.get('/:id', auth, adminOnly, certificadoController.getById);
   .post('/', auth, adminOnly, certificadoController.create)
-  .put('/', auth, adminOnly, certificadoController.update)
+  .put('/:id', auth, adminOnly, certificadoController.update)
   .delete('/', auth, adminOnly, certificadoController.delete);
 
 export default CertificadoRouter;

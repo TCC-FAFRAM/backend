@@ -9,7 +9,7 @@ FuncaoRouter
   .get('/', auth, adminOnly, funcaoController.getAll)
   //.get('/:id', auth, adminOnly, funcaoController.getById);
   .post('/', auth, adminOnly, funcaoController.create)
-  .post('/', auth, adminOnly, funcaoController.update)
-  .post('/', auth, adminOnly, funcaoController.delete);
+  .put('/:id', auth, adminOnly, funcaoController.update)
+  .delete('/', auth, adminOnly, funcaoController.delete);
 
 export default FuncaoRouter;

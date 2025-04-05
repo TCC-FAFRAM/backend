@@ -9,7 +9,7 @@ TentativasProvaRouter
   .get('/', auth, adminOnly, tentativasProvaController.getAll)
   //.get('/:id', auth, adminOnly, tentativasProvaController.getById);
   .post('/', auth, adminOnly, tentativasProvaController.create)
-  .post('/', auth, adminOnly, tentativasProvaController.update)
-  .post('/', auth, adminOnly, tentativasProvaController.delete);
+  .put('/', auth, adminOnly, tentativasProvaController.update)
+  .delete('/', auth, adminOnly, tentativasProvaController.delete);
 
 export default TentativasProvaRouter;

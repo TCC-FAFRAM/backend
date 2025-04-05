@@ -9,7 +9,7 @@ AulaRouter
   .get('/', auth, adminOnly, aulaController.getAll)
   //.get('/:id', auth, adminOnly, aulaController.getById);
   .post('/', auth, adminOnly, aulaController.create)
-  .post('/', auth, adminOnly, aulaController.update)
-  .post('/', auth, adminOnly, aulaController.delete);
+  .put('/:id', auth, adminOnly, aulaController.update)
+  .delete('/', auth, adminOnly, aulaController.delete);
 
 export default AulaRouter;

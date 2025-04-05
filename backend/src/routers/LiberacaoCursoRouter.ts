@@ -9,7 +9,7 @@ LiberacaoCursoRouter
   .get('/', auth, adminOnly, liberacaoCursoController.getAll)
   //.get('/:id', auth, adminOnly, liberacaoCursoController.getById);
   .post('/', auth, adminOnly, liberacaoCursoController.create)
-  .post('/', auth, adminOnly, liberacaoCursoController.update)
-  .post('/', auth, adminOnly, liberacaoCursoController.delete);
+  .put('/', auth, adminOnly, liberacaoCursoController.update)
+  .delete('/', auth, adminOnly, liberacaoCursoController.delete);
 
 export default LiberacaoCursoRouter;

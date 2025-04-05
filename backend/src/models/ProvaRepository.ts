@@ -7,6 +7,6 @@ const prisma = new PrismaClient();
 
 export class ProvaRepository extends BaseRepository<Prova> implements IProvaRepository {
   constructor() {
-    super(prisma, prisma.prova);
+    super(prisma, prisma.prova,'id_prova');
   }
 }

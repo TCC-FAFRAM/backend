@@ -9,7 +9,7 @@ UsuarioFuncaoRouter
   .get('/', auth, adminOnly, usuarioFuncaoController.getAll)
   //.get('/:id', auth, adminOnly, usuarioFuncaoController.getById);
   .post('/', auth, adminOnly, usuarioFuncaoController.create)
-  .post('/', auth, adminOnly, usuarioFuncaoController.update)
-  .post('/', auth, adminOnly, usuarioFuncaoController.delete);
+  .put('/', auth, adminOnly, usuarioFuncaoController.update)
+  .delete('/', auth, adminOnly, usuarioFuncaoController.delete);
 
 export default UsuarioFuncaoRouter;

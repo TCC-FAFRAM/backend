@@ -7,6 +7,6 @@ const prisma = new PrismaClient();
 
 export class CursoRepository extends BaseRepository<Curso> implements ICursoRepository {
   constructor() {
-    super(prisma, prisma.curso);
+    super(prisma, prisma.curso, 'id_curso');
   }
 }

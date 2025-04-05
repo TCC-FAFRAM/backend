@@ -10,6 +10,7 @@ import ProvaRouter from './ProvaRouter';
 import TentativasProvaRouter from './TentativasProvaRouter';
 import UsuarioFuncaoRouter from './UsuarioFuncaoRouter';
 import UsuarioRouter from './UsuarioRouter';
+import DitritoRouter from './DistritoRouter';
 
 const router = express.Router();
 
@@ -24,6 +25,7 @@ router.use('/prova', ProvaRouter);
 router.use('/tentativasprova', TentativasProvaRouter);
 router.use('/usuariofuncao', UsuarioFuncaoRouter);
 router.use('/usuario', UsuarioRouter);
+router.use('/localizacao', DitritoRouter);
 
 
 export default router;  

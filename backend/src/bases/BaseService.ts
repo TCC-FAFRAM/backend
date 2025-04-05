@@ -18,7 +18,6 @@ export interface IBaseService<TypeData> {
   }): Promise<PagedResult<TypeData>>;
 
   getById(id: number, include?: any): Promise<TypeData | null>;
-
   create(data: any): Promise<TypeData>;
   update(id: number, data: any): Promise<TypeData>;
   delete(id: number): Promise<TypeData>;

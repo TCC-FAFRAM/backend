@@ -8,4 +8,21 @@ export class TentativasProvaController extends BaseController<TentativasProva> i
   constructor() {
     super(new TentativasProvaService());
   }
+
+  protected getSearchFields(): string[] {
+    return ["nome", "email"];
+  }
+
+  protected getInclude(): any {
+    return {
+      Funcao: true,
+      Fazenda: true,
+      Certificados: true,
+      TentativasProva: true,
+      CursosConcluidos: true,
+      LiberacoesCursoFuncionario: true,
+      LiberacoesCursoAdmin: true,
+
+    };
+  }
 }
