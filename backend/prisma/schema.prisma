@@ -82,6 +82,7 @@ model Aula {
   titulo           String
   url_video        String
   duracao          Int
+  descricao        String
   fk_id_curso      Int
   Curso            Curso              @relation(fields: [fk_id_curso], references: [id_curso])
   AulasConcluidas  AulasConcluidas[]
