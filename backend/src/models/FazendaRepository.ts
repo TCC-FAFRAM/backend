@@ -7,6 +7,6 @@ const prisma = new PrismaClient();
 
 export class FazendaRepository extends BaseRepository<Fazenda> implements IFazendaRepository {
   constructor() {
-    super(prisma, prisma.fazenda);
+    super(prisma, prisma.fazenda, 'id_fazenda');
   }
 }

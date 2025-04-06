@@ -7,6 +7,6 @@ const prisma = new PrismaClient();
 
 export class AulasConcluidasRepository extends BaseRepository<AulasConcluidas> implements IAulasConcluidasRepository {
   constructor() {
-    super(prisma, prisma.aulasConcluidas);
+    super(prisma, prisma.aulasConcluidas, 'id_aula_concluida');
   }
 }
