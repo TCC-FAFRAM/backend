@@ -10,7 +10,10 @@ import FazendaRouter from './FazendaRouter';
 import FuncaoCursoRouter from './FuncaoCursoRouter';
 import FuncaoRouter from './FuncaoRouter';
 import LiberacaoCursoRouter from './LiberacaoCursoRouter';
+import ModuloRouter from './ModuloRouter';
 import ProvaRouter from './ProvaRouter';
+import QuestaoRouter from './QuestaoRouter';
+import RespostaQuestaoRouter from './RespostaQuestaoRouter';
 import TentativasProvaRouter from './TentativasProvaRouter';
 import UsuarioFuncaoRouter from './UsuarioFuncaoRouter';
 import UsuarioRouter from './UsuarioRouter';
@@ -44,6 +47,8 @@ route.use('/usuario', UsuarioRouter);
 route.use('/localizacao', DitritoRouter);
 route.use('/fazenda', FazendaRouter);
 route.use('/aulasConcluidas', AulasConcluidasRouter);
-
+route.use('/modulo', ModuloRouter);
+route.use('/questao', QuestaoRouter);
+route.use('/respostaQuestao', RespostaQuestaoRouter);
 
 export default route;  

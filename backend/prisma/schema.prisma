@@ -61,11 +61,26 @@ model Curso {
   id_curso        Int              @id @default(autoincrement())
   titulo          String
   descricao       String
-  Aulas           Aula[]
+  Modulos         Modulo[]
   Certificados    Certificado[]
   FuncaoCurso     FuncaoCurso[]
   LiberacoesCurso LiberacaoCurso[] @relation("CursoLiberacao")
-  Prova           Prova?
+}
+
+model Modulo {
+  id_modulo             Int               @id @default(autoincrement())
+  titulo                String
+  descricao             String
+  ordem                 Int // Para controlar a sequência dos módulos
+  concluido             Boolean           @default(false)
+  aulas_concluidas      AulasConcluidas[]
+  fk_id_curso           Int
+  Curso                 Curso             @relation(fields: [fk_id_curso], references: [id_curso])
+  Aulas                 Aula[]
+  Prova                 Prova?
+  ModuloAnterior        Modulo?           @relation("ModuloSequencia", fields: [fk_id_modulo_anterior], references: [id_modulo])
+  ModulosPosteriores    Modulo[]          @relation("ModuloSequencia")
+  fk_id_modulo_anterior Int?
 }
 
 model FuncaoCurso {
@@ -83,8 +98,8 @@ model Aula {
   url_video        String
   duracao          Int
   descricao        String
-  fk_id_curso      Int
-  Curso            Curso              @relation(fields: [fk_id_curso], references: [id_curso])
+  fk_id_modulo     Int
+  Modulo           Modulo             @relation(fields: [fk_id_modulo], references: [id_modulo])
   AulasConcluidas  AulasConcluidas[]
   CursosConcluidos CursosConcluidos[]
 }
@@ -111,22 +126,44 @@ model Certificado {
 
 model Prova {
   id_prova        Int               @id @default(autoincrement())
-  fk_id_curso     Int               @unique
+  fk_id_modulo    Int               @unique
   nota_minima     Float
   total_perguntas Int
-  Curso           Curso             @relation(fields: [fk_id_curso], references: [id_curso])
+  Modulo          Modulo            @relation(fields: [fk_id_modulo], references: [id_modulo])
   TentativasProva TentativasProva[]
+  Questoes        Questao[]
+}
+
+model Questao {
+  id_questao       Int               @id @default(autoincrement())
+  pergunta         String
+  opcoes           String[] // Array de strings para as opções de resposta
+  resposta_correta Int // Índice da opção correta
+  peso             Int // 1 = fácil, 2 = médio, 3 = difícil
+  fk_id_prova      Int
+  Prova            Prova             @relation(fields: [fk_id_prova], references: [id_prova])
+  RespostasAluno   RespostaQuestao[]
+}
+
+model RespostaQuestao {
+  id_resposta     Int             @id @default(autoincrement())
+  fk_id_questao   Int
+  fk_id_tentativa Int
+  resposta_aluno  Int // Índice da opção escolhida pelo aluno
+  Questao         Questao         @relation(fields: [fk_id_questao], references: [id_questao])
+  TentativaProva  TentativasProva @relation(fields: [fk_id_tentativa], references: [id_tentativa_prova])
 }
 
 model TentativasProva {
-  id_tentativa_prova Int      @id @default(autoincrement())
+  id_tentativa_prova Int               @id @default(autoincrement())
   fk_id_funcionario  Int
   fk_id_prova        Int
   nota               Float
-  data_tentativa     DateTime @default(now())
+  data_tentativa     DateTime          @default(now())
   passou             Boolean
-  Usuario            Usuario  @relation(fields: [fk_id_funcionario], references: [id_usuario])
-  Prova              Prova    @relation(fields: [fk_id_prova], references: [id_prova])
+  Usuario            Usuario           @relation(fields: [fk_id_funcionario], references: [id_usuario])
+  Prova              Prova             @relation(fields: [fk_id_prova], references: [id_prova])
+  Respostas          RespostaQuestao[]
 }
 
 model LiberacaoCurso {
@@ -157,6 +194,8 @@ model AulasConcluidas {
   completado_em     DateTime @default(now())
   Aula              Aula     @relation(fields: [fk_id_aula], references: [id_aula])
   Usuario           Usuario  @relation(fields: [fk_id_usuario], references: [id_usuario])
+  Modulo            Modulo?  @relation(fields: [moduloId_modulo], references: [id_modulo])
+  moduloId_modulo   Int?
 }
 
 enum Role {
