@@ -20,6 +20,7 @@ yarn.lock
 
 # Ambiente de desenvolvimento
 .env
+backend/.env
 
 # Arquivos de configuração do editor
 .vscode/
