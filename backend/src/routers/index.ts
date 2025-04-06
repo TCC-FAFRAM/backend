@@ -1,4 +1,5 @@
 import express from 'express';
+import AulaRouter from './AulaRouter';
 import AulasConcluidasRouter from './AulasConcluidasRouter';
 import AuthRouter from './AuthRouter';
 import CertificadoRouter from './CertificadoRouter';
@@ -16,6 +17,19 @@ import UsuarioRouter from './UsuarioRouter';
 
 const route = express.Router();
 
+router.use('/auth', AuthRouter);
+router.use('/certificado', CertificadoRouter);
+router.use('/curso', CursoRouter);
+router.use('/aula', AulaRouter);
+router.use('/cursosconcluidos', CursosConcluidosRouter);
+router.use('/funcaocurso', FuncaoCursoRouter);
+router.use('/funcao', FuncaoRouter);
+router.use('/liberacaocurso', LiberacaoCursoRouter);
+router.use('/prova', ProvaRouter);
+router.use('/tentativasprova', TentativasProvaRouter);
+router.use('/usuariofuncao', UsuarioFuncaoRouter);
+router.use('/usuario', UsuarioRouter);
+router.use('/localizacao', DitritoRouter);
 route.use('/auth', AuthRouter);
 route.use('/certificado', CertificadoRouter);
 route.use('/curso', CursoRouter);

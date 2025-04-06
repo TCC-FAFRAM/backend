@@ -7,7 +7,7 @@ const AulaRouter = express.Router();
 
 AulaRouter
   .get('/', auth, adminOnly, aulaController.getAll)
-  //.get('/:id', auth, adminOnly, aulaController.getById);
+  .get('/id', auth, adminOnly, aulaController.getByIdCurso)
   .post('/', auth, adminOnly, aulaController.create)
   .put('/:id', auth, adminOnly, aulaController.update)
   .delete('/', auth, adminOnly, aulaController.delete);

@@ -57,7 +57,7 @@ export class RepositoryException extends Error {
         };
       }
       
-
+    console.error(error);
     return { message: fallbackMessage, statusCode: fallbackStatus };
   }
 }

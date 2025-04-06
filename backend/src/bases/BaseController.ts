@@ -6,6 +6,8 @@ export interface IBaseController {
   create(req: Request, res: Response): Promise<void>;
   update(req: Request, res: Response): Promise<void>;
   delete(req: Request, res: Response): Promise<void>;
+  getById(req: Request, res: Response): Promise<void>;
+
 }
 
 export abstract class BaseController<TypeData> implements IBaseController {
@@ -20,6 +22,7 @@ export abstract class BaseController<TypeData> implements IBaseController {
     this.create = this.create.bind(this);
     this.update = this.update.bind(this);
     this.delete = this.delete.bind(this);
+    this.getById = this.getById.bind(this);
   }
 
   // 🆕 Pode ser sobrescrito em controllers concretos
@@ -84,4 +87,21 @@ export abstract class BaseController<TypeData> implements IBaseController {
       res.status(500).json({ error: (error as Error).message });
     }
   }
+
+  async getById(req: Request, res: Response): Promise<void> {
+    try {
+      const id = Number(req.query.id);
+      const include = this.getInclude(); // opcional
+      const item = await this.baseService.getById(id, include);
+  
+      if (!item) {
+         res.status(404).json({ message: 'Item não encontrado.' });
+      }
+  
+      res.status(200).json(item);
+    } catch (error) {
+      res.status(500).json({ error: (error as Error).message });
+    }
+  }
+  
 }

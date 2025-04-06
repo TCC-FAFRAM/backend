@@ -2,6 +2,7 @@ import { Prisma, PrismaClient } from "@prisma/client";
 import { RepositoryException } from "../exceptions/repository-exception"; // ajuste o caminho se necessário
 
 export interface IBaseRepository<TypeData> {
+
   createItem(data: any): Promise<TypeData>;
   getAllItems(params?: {
     take?: number;

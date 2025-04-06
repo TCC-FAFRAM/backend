@@ -8,27 +8,35 @@ datasource db {
 }
 
 model Usuario {
-  id_usuario                 Int                @id @default(autoincrement())
-  nome                       String
-  sobre_nome                 String
-  email                      String             @unique
-  senha                      String
-  cpf                        String             @unique
-  tipo                       Role               @default(USER)
-  data_cadastro              DateTime           @default(now())
-  fk_id_funcao               Int?
-  fk_id_fazenda              Int?
-  distrito_id                Int?
-  municipio_id               Int?
-  complemento                String?
-  AulasConcluidas            AulasConcluidas[]
+  id_usuario    Int      @id @default(autoincrement())
+  nome          String
+  sobre_nome    String
+  email         String   @unique
+  senha         String?
+  cpf           String   @unique
+  tipo          Role     @default(USER)
+  data_cadastro DateTime @default(now())
+
+  // Para usuarios do tipo USER, esses campos sao obrigatorios.
+  // Para ADMIN e MASTER, poderao ser nulos.
+  fk_id_funcao Int?
+  Funcao       Funcao? @relation(fields: [fk_id_funcao], references: [id_funcao])
+
+  fk_id_fazenda Int?
+  Fazenda       Fazenda? @relation(fields: [fk_id_fazenda], references: [id_fazenda])
+
+  // Campos de endereço (baseados na API de localidades do IBGE)
+  distrito_id  Int?
+  municipio_id Int?
+  complemento  String?
+
+  // Outras relacoes...
   Certificados               Certificado[]
-  CursosConcluidos           CursosConcluidos[]
-  LiberacoesCursoAdmin       LiberacaoCurso[]   @relation("AdminLiberacao")
-  LiberacoesCursoFuncionario LiberacaoCurso[]   @relation("FuncionarioLiberacao")
   TentativasProva            TentativasProva[]
-  Fazenda                    Fazenda?           @relation(fields: [fk_id_fazenda], references: [id_fazenda])
-  Funcao                     Funcao?            @relation(fields: [fk_id_funcao], references: [id_funcao])
+  CursosConcluidos           CursosConcluidos[]
+  LiberacoesCursoFuncionario LiberacaoCurso[]   @relation(name: "FuncionarioLiberacao")
+  LiberacoesCursoAdmin       LiberacaoCurso[]   @relation(name: "AdminLiberacao")
+  AulasConcluidas            AulasConcluidas[]
 }
 
 model Fazenda {

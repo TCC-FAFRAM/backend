@@ -55,4 +55,7 @@ export abstract class BaseService<TypeData> implements IBaseService<TypeData> {
   async delete(id: number): Promise<TypeData> {
     return await this.repository.deleteItem(id);
   }
+
+
+  
 }
