@@ -11,12 +11,14 @@ import TentativasProvaRouter from './TentativasProvaRouter';
 import UsuarioFuncaoRouter from './UsuarioFuncaoRouter';
 import UsuarioRouter from './UsuarioRouter';
 import DitritoRouter from './DistritoRouter';
+import AulaRouter from './AulaRouter';
 
 const router = express.Router();
 
 router.use('/auth', AuthRouter);
 router.use('/certificado', CertificadoRouter);
 router.use('/curso', CursoRouter);
+router.use('/aula', AulaRouter);
 router.use('/cursosconcluidos', CursosConcluidosRouter);
 router.use('/funcaocurso', FuncaoCursoRouter);
 router.use('/funcao', FuncaoRouter);

@@ -21,7 +21,7 @@ model Usuario {
   nome          String
   sobre_nome    String
   email         String   @unique
-  senha         String
+  senha         String?
   cpf           String   @unique 
   tipo          Role     @default(USER)
   data_cadastro DateTime @default(now())
