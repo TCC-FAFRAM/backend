@@ -1,13 +1,13 @@
+import { Usuario } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import ms from 'ms';
-import { Usuario } from '@prisma/client';
-import { UserRepository } from '../models/UserRepository';
+import { UsuarioService } from './UsuarioService';
 
 class AuthService {
   static async login(email: string, password: string): Promise<{ user: Usuario; token: string; refreshToken: string }> {
-    const user = await UserRepository.findByEmail(email);
-    if (!user || !(await bcrypt.compare(password, user.senha))) {
+    const usuarioService = new UsuarioService();
+    const user = await usuarioService.findByEmail(email);
+    if (!user || !user.senha || !(await bcrypt.compare(password, user.senha))) {
       throw new Error('Credenciais inválidas');
     }
 
@@ -54,11 +54,11 @@ class AuthService {
   }
 
   static async register(userData: Omit<Usuario, 'id'>): Promise<Usuario> {
-    const hashedPassword = await bcrypt.hash(userData.senha, 10);
-    return UserRepository.createUser({
+    const usuarioService = new UsuarioService();
+    const hashedPassword = await bcrypt.hash(userData.senha || '', 10);
+    return usuarioService.create({
       ...userData,
       senha: hashedPassword,
-      
     });
   }
 }
