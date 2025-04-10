@@ -1,48 +1,54 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import ms from 'ms';
 import { Usuario } from '@prisma/client';
 import { UserRepository } from '../models/UserRepository';
 
 class AuthService {
-  static async login(email: string, password: string): Promise<{ user: Usuario; token: string; refreshToken: string }> {
+  static async login(
+    email: string,
+    password: string
+  ): Promise<{ user: Usuario; token: string; refreshToken: string }> {
     const user = await UserRepository.findByEmail(email);
-    if (!user || !(await bcrypt.compare(password, user.senha))) {
+
+    // Verifica se o usuário existe e se a senha é válida
+    if (!user || !user.senha || !(await bcrypt.compare(password, user.senha))) {
       throw new Error('Credenciais inválidas');
     }
 
     const secret = process.env.JWT_SECRET as string;
-    const expiresInValue = '1h';  // Expiração curta para o access token
-    const refreshTokenExpiresIn = '7d';  // Expiração longa para o refresh token
+    const expiresIn = '1h';
+    const refreshTokenExpiresIn = '7d';
 
     // Gera o access token
     const accessToken = jwt.sign(
-      { nome: `${user.nome} ${user.sobre_nome}`, email: user.email, role: user.tipo },
+      {
+        nome: `${user.nome} ${user.sobre_nome}`,
+        email: user.email,
+        role: user.tipo,
+      },
       secret,
-      { expiresIn: expiresInValue }
+      { expiresIn }
     );
 
     // Gera o refresh token
-    const refreshToken = jwt.sign(
-      { id: user.id_usuario },
-      secret,
-      { expiresIn: refreshTokenExpiresIn }
-    );
+    const refreshToken = jwt.sign({ id: user.id_usuario }, secret, {
+      expiresIn: refreshTokenExpiresIn,
+    });
 
     return { user, token: accessToken, refreshToken };
   }
 
-  // Função para trocar o refresh token por um novo access token
+  // Troca refresh token por novo access token
   static async refreshAccessToken(refreshToken: string): Promise<string> {
     try {
       const secret = process.env.JWT_SECRET as string;
+      const decoded = jwt.verify(refreshToken, secret) as jwt.JwtPayload;
 
-      // Verifica e decodifica o refresh token
-      const decoded: any = jwt.verify(refreshToken, secret);
-
-      // Gera um novo access token
       const accessToken = jwt.sign(
-        { id: decoded.id, role: decoded.role },
+        {
+          id: decoded.id,
+          role: decoded.role,
+        },
         secret,
         { expiresIn: '1h' }
       );
@@ -54,11 +60,11 @@ class AuthService {
   }
 
   static async register(userData: Omit<Usuario, 'id'>): Promise<Usuario> {
-    const hashedPassword = await bcrypt.hash(userData.senha, 10);
+    const hashedPassword = await bcrypt.hash(userData.senha ?? '', 10);
+
     return UserRepository.createUser({
       ...userData,
       senha: hashedPassword,
-      
     });
   }
 }

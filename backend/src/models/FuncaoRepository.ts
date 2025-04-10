@@ -7,6 +7,6 @@ const prisma = new PrismaClient();
 
 export class FuncaoRepository extends BaseRepository<Funcao> implements IFuncaoRepository {
   constructor() {
-    super(prisma, prisma.funcao);
+    super(prisma, prisma.funcao, 'id_funcao');
   }
 }

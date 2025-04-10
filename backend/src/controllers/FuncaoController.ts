@@ -8,4 +8,14 @@ export class FuncaoController extends BaseController<Funcao> implements IFuncaoC
   constructor() {
     super(new FuncaoService());
   }
+
+
+  protected getSearchFields(): string[] {
+    return ["nome", "descricao"];
+  }
+
+  protected getInclude(): any {
+    return {
+    };
+  }
 }
