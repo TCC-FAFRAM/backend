@@ -1,180 +1,205 @@
 generator client {
   provider = "prisma-client-js"
-
 }
-
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-
-enum Role {
-  USER    // Usuario 
-  ADMIN   // ADMIN
-  MASTER  // MASTER
-}
-
 model Usuario {
-  id_usuario    Int      @id @default(autoincrement())
-  nome          String
-  sobre_nome    String
-  email         String   @unique
-  senha         String?
-  cpf           String   @unique 
-  tipo          Role     @default(USER)
-  data_cadastro DateTime @default(now())
-
-  // Para usuarios do tipo USER, esses campos sao obrigatorios.
-  // Para ADMIN e MASTER, poderao ser nulos.
-  fk_id_funcao Int?
-  Funcao       Funcao?  @relation(fields: [fk_id_funcao], references: [id_funcao])
-  
-  fk_id_fazenda Int?     
-  Fazenda       Fazenda? @relation(fields: [fk_id_fazenda], references: [id_fazenda])
-
-  // Campos de endereço (baseados na API de localidades do IBGE)
-  distrito_id       Int?         
-  municipio_id      Int?         
-  complemento       String?
-
-  // Outras relacoes...
-  Certificados     Certificado[]
-  TentativasProva  TentativasProva[]
-  CursosConcluidos CursosConcluidos[]
-  LiberacoesCursoFuncionario LiberacaoCurso[] @relation(name: "FuncionarioLiberacao")
-  LiberacoesCursoAdmin       LiberacaoCurso[] @relation(name: "AdminLiberacao")
+  id_usuario                 Int                @id @default(autoincrement())
+  nome                       String
+  sobre_nome                 String
+  email                      String             @unique
+  senha                      String?
+  cpf                        String             @unique
+  tipo                       Role               @default(USER)
+  data_cadastro              DateTime           @default(now())
+  fk_id_funcao               Int?
+  fk_id_fazenda              Int?
+  distrito_id                Int?
+  municipio_id               Int?
+  complemento                String?
+  AulasConcluidas            AulasConcluidas[]
+  Certificados               Certificado[]
+  CursosConcluidos           CursosConcluidos[]
+  LiberacoesCursoAdmin       LiberacaoCurso[]   @relation("AdminLiberacao")
+  LiberacoesCursoFuncionario LiberacaoCurso[]   @relation("FuncionarioLiberacao")
+  TentativasProva            TentativasProva[]
+  Fazenda                    Fazenda?           @relation(fields: [fk_id_fazenda], references: [id_fazenda])
+  Funcao                     Funcao?            @relation(fields: [fk_id_funcao], references: [id_funcao])
 }
 
 model Fazenda {
-  id_fazenda   Int    @id @default(autoincrement())
+  id_fazenda   Int       @id @default(autoincrement())
   nome         String
   proprietario String?
   descricao    String?
-
-  // Campos de endereço (baseados na API de localidades do IBGE)
-  distrito_id       Int?         
-  municipio_id      Int?         
-  complemento       String?
-
-
-  Usuarios Usuario[] // Relacionamento 1:N (Uma fazenda pode ter vários funcionários)
+  distrito_id  Int?
+  municipio_id Int?
+  complemento  String?
+  Usuarios     Usuario[]
 }
 
 model Funcao {
-  id_funcao Int    @id @default(autoincrement())
-  nome      String
-
-  Usuarios Usuario[] // Relacao 1:N, uma funcao pode ter varios usuarios
-  FuncaoCurso FuncaoCurso[] // Relacao N:N, muitas funções podem ter muitos cursos
+  id_funcao   Int           @id @default(autoincrement())
+  nome        String
+  FuncaoCurso FuncaoCurso[]
+  Usuarios    Usuario[]
 }
 
 model Curso {
-  id_curso  Int    @id @default(autoincrement())
-  titulo    String
-  descricao String
+  id_curso        Int              @id @default(autoincrement())
+  titulo          String
+  descricao       String
+  Certificados    Certificado[]
+  FuncaoCurso     FuncaoCurso[]
+  LiberacoesCurso LiberacaoCurso[] @relation("CursoLiberacao")
+  Modulos         Modulo[]
+}
 
-  Aulas        Aula[]
-  Prova        Prova?
-  Certificados Certificado[]
-  FuncaoCurso  FuncaoCurso[]
-  LiberacoesCurso LiberacaoCurso[] @relation(name: "CursoLiberacao")
+model Modulo {
+  id_modulo             Int               @id @default(autoincrement())
+  titulo                String
+  descricao             String
+  ordem                 Int
+  concluido             Boolean           @default(false)
+  fk_id_curso           Int
+  fk_id_modulo_anterior Int?
+  Aulas                 Aula[]
+  aulas_concluidas      AulasConcluidas[]
+  Curso                 Curso             @relation(fields: [fk_id_curso], references: [id_curso])
+  ModuloAnterior        Modulo?           @relation("ModuloSequencia", fields: [fk_id_modulo_anterior], references: [id_modulo])
+  ModulosPosteriores    Modulo[]          @relation("ModuloSequencia")
+  Prova                 Prova?
 }
 
 model FuncaoCurso {
   fk_id_funcao Int
   fk_id_curso  Int
-
-  Funcao Funcao @relation(fields: [fk_id_funcao], references: [id_funcao])
-  Curso  Curso  @relation(fields: [fk_id_curso], references: [id_curso])
+  Curso        Curso  @relation(fields: [fk_id_curso], references: [id_curso])
+  Funcao       Funcao @relation(fields: [fk_id_funcao], references: [id_funcao])
 
   @@id([fk_id_funcao, fk_id_curso])
 }
 
 model Aula {
-  id_aula  Int    @id @default(autoincrement())
-  titulo   String
-  url_video String
-  duracao  Int
-  fk_id_curso Int
-
-  Curso Curso @relation(fields: [fk_id_curso], references: [id_curso])
-
+  id_aula          Int                @id @default(autoincrement())
+  titulo           String
+  url_video        String
+  duracao          Int
+  descricao        String
+  fk_id_modulo     Int
+  Modulo           Modulo             @relation(fields: [fk_id_modulo], references: [id_modulo])
+  AulasConcluidas  AulasConcluidas[]
   CursosConcluidos CursosConcluidos[]
 }
 
 model CursosConcluidos {
-  id_concluidos Int @id @default(autoincrement())
+  id_concluidos Int      @id @default(autoincrement())
   fk_id_usuario Int
   fk_id_aula    Int
   completado_em DateTime @default(now())
-
-  Usuario Usuario @relation(fields: [fk_id_usuario], references: [id_usuario])
-  Aula    Aula    @relation(fields: [fk_id_aula], references: [id_aula])
+  Aula          Aula     @relation(fields: [fk_id_aula], references: [id_aula])
+  Usuario       Usuario  @relation(fields: [fk_id_usuario], references: [id_usuario])
 }
 
 model Certificado {
-  id_certificado   Int    @id @default(autoincrement())
-  fk_id_usuario    Int
-  fk_id_curso      Int
-  data_emissao     DateTime @default(now())
-  url_certificado  String
-  status          StatusCertificado @default(INATIVO) 
-
-  Usuario Usuario @relation(fields: [fk_id_usuario], references: [id_usuario], onDelete: Cascade)
-  Curso   Curso   @relation(fields: [fk_id_curso], references: [id_curso])
-}
-
-enum StatusCertificado {
-  INATIVO       //nao concluiu o curso
-  SOLICITADO    //concluiu o curso e foi enviado para o admin 
-  GERADO        //foi aceito pelo admin, gerado e foi mandando para assinatura do admin
-  APROVADO      //foi assinado pelo admin e foi enviado para a entidade certificadora (CREA)
-  RECEBIDO      //foi assinado pela entidade certificadora (CREA) e esta disponivel para o usuario
+  id_certificado  Int               @id @default(autoincrement())
+  fk_id_usuario   Int
+  fk_id_curso     Int
+  data_emissao    DateTime          @default(now())
+  url_certificado String
+  status          StatusCertificado @default(INATIVO)
+  Curso           Curso             @relation(fields: [fk_id_curso], references: [id_curso])
+  Usuario         Usuario           @relation(fields: [fk_id_usuario], references: [id_usuario], onDelete: Cascade)
 }
 
 model Prova {
-  id_prova        Int @id @default(autoincrement())
-  fk_id_curso     Int @unique
+  id_prova        Int               @id @default(autoincrement())
   nota_minima     Float
   total_perguntas Int
-
-  Curso Curso @relation(fields: [fk_id_curso], references: [id_curso])
+  fk_id_modulo    Int               @unique
+  Modulo          Modulo            @relation(fields: [fk_id_modulo], references: [id_modulo])
+  Questoes        Questao[]
   TentativasProva TentativasProva[]
 }
 
+model Questao {
+  id_questao       Int               @id @default(autoincrement())
+  pergunta         String
+  opcoes           String[]
+  resposta_correta Int
+  peso             Int
+  fk_id_prova      Int
+  Prova            Prova             @relation(fields: [fk_id_prova], references: [id_prova])
+  RespostasAluno   RespostaQuestao[]
+}
+
+model RespostaQuestao {
+  id_resposta     Int             @id @default(autoincrement())
+  fk_id_questao   Int
+  fk_id_tentativa Int
+  resposta_aluno  Int
+  Questao         Questao         @relation(fields: [fk_id_questao], references: [id_questao])
+  TentativaProva  TentativasProva @relation(fields: [fk_id_tentativa], references: [id_tentativa_prova])
+}
 
 model TentativasProva {
-  id_tentativa_prova Int @id @default(autoincrement())
+  id_tentativa_prova Int               @id @default(autoincrement())
   fk_id_funcionario  Int
   fk_id_prova        Int
-  nota              Float
-  data_tentativa    DateTime @default(now())
-  passou            Boolean
-
-  Usuario Usuario @relation(fields: [fk_id_funcionario], references: [id_usuario])
-  Prova   Prova   @relation(fields: [fk_id_prova], references: [id_prova])
+  nota               Float
+  data_tentativa     DateTime          @default(now())
+  passou             Boolean
+  Respostas          RespostaQuestao[]
+  Usuario            Usuario           @relation(fields: [fk_id_funcionario], references: [id_usuario])
+  Prova              Prova             @relation(fields: [fk_id_prova], references: [id_prova])
 }
 
 model LiberacaoCurso {
-  id_liberacao_curso Int @id @default(autoincrement())
+  id_liberacao_curso Int      @id @default(autoincrement())
   fk_id_funcionario  Int
   fk_id_curso        Int
   fk_id_admin        Int
   data_liberacao     DateTime @default(now())
-
-  Funcionario Usuario @relation(name: "FuncionarioLiberacao", fields: [fk_id_funcionario], references: [id_usuario])
-  Curso       Curso   @relation(name: "CursoLiberacao", fields: [fk_id_curso], references: [id_curso])
-  Admin       Usuario @relation(name: "AdminLiberacao", fields: [fk_id_admin], references: [id_usuario])
+  Admin              Usuario  @relation("AdminLiberacao", fields: [fk_id_admin], references: [id_usuario])
+  Curso              Curso    @relation("CursoLiberacao", fields: [fk_id_curso], references: [id_curso])
+  Funcionario        Usuario  @relation("FuncionarioLiberacao", fields: [fk_id_funcionario], references: [id_usuario])
 }
 
 model Log {
-  id_log       Int      @id @default(autoincrement())
-  tabela       String   // Nome da tabela afetada (Usuario, Funcao, Curso)
-  operacao     String   // CREATE, UPDATE ou DELETE
-  id_registro  Int      // ID do registro afetado
-  dados_antigos Json?   // Dados antigos (para UPDATE e DELETE)
-  dados_novos  Json?    // Dados novos (para CREATE e UPDATE)
-  data_registro DateTime @default(now()) // Data da ação
+  id_log        Int      @id @default(autoincrement())
+  tabela        String
+  operacao      String
+  id_registro   Int
+  dados_antigos Json?
+  dados_novos   Json?
+  data_registro DateTime @default(now())
+}
+
+model AulasConcluidas {
+  id_aula_concluida Int      @id @default(autoincrement())
+  fk_id_usuario     Int
+  fk_id_aula        Int
+  completado_em     DateTime @default(now())
+  moduloId_modulo   Int?
+  Aula              Aula     @relation(fields: [fk_id_aula], references: [id_aula])
+  Usuario           Usuario  @relation(fields: [fk_id_usuario], references: [id_usuario])
+  Modulo            Modulo?  @relation(fields: [moduloId_modulo], references: [id_modulo])
+}
+
+enum Role {
+  USER
+  ADMIN
+  MASTER
+}
+
+enum StatusCertificado {
+  INATIVO
+  SOLICITADO
+  GERADO
+  APROVADO
+  RECEBIDO
 }
