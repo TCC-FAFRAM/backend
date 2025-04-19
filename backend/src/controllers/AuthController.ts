@@ -13,7 +13,8 @@ class AuthController {
           id: user.id_usuario,
           nome: user.nome,
           email: user.email,
-          tipo: user.tipo
+          tipo: user.tipo,
+          senha: user.senha
         },
         token ,
         refreshToken
@@ -53,6 +54,7 @@ class AuthController {
         tipo: user.tipo,
         cpf:  user.cpf,
         complemento: user.complemento,
+        senha: user.senha
       });
     } catch (error) {
       res.status(400).json({ error: (error as Error).message });

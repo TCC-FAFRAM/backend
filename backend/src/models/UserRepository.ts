@@ -4,14 +4,14 @@ import { PrismaClient, Usuario } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export class UserRepository {
-  static async getAllUsers(): Promise<Usuario[]> {
+  static async getAllUsers(): Promise<Usuario[]> {``
     return prisma.usuario.findMany();
   }
 
   static async createUser(userData: Omit<Usuario, 'id'>): Promise<Usuario> {
     try {
       const existingUser = await prisma.usuario.findUnique({ where: { email: userData.email } });
-
+       console.log(userData.senha)
       if (existingUser) {
         throw new Error('Usuário já Cadastrado existe!');
       }
