@@ -1,7 +1,7 @@
 import { Usuario } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { Usuario } from '@prisma/client';
+
 import { UserRepository } from '../models/UserRepository';
 
 class AuthService {
