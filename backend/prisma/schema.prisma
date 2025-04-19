@@ -45,6 +45,7 @@ model Fazenda {
 model Funcao {
   id_funcao   Int           @id @default(autoincrement())
   nome        String
+  descricao   String?
   FuncaoCurso FuncaoCurso[]
   Usuarios    Usuario[]
 }
@@ -89,7 +90,7 @@ model Aula {
   titulo           String
   url_video        String
   duracao          Int
-  descricao        String
+  descricao        String?
   fk_id_modulo     Int
   Modulo           Modulo             @relation(fields: [fk_id_modulo], references: [id_modulo])
   AulasConcluidas  AulasConcluidas[]
