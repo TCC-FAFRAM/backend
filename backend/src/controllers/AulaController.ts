@@ -4,18 +4,18 @@ import { BaseController, IBaseController } from "../bases/BaseController";
 import { AulaService } from "../services/AulaService";
 
 interface IAulaController extends IBaseController {
-  getByIdCurso(req: Request, res: Response): Promise<void>;
+  getByIdModulo(req: Request, res: Response): Promise<void>;
 }
 
 export class AulaController extends BaseController<Aula> implements IAulaController {
   service = new AulaService();
   constructor() {
     super(new AulaService());
-    this.getByIdCurso = this.getByIdCurso.bind(this);
+    this.getByIdModulo = this.getByIdModulo.bind(this);
   }
 
 
-  async getByIdCurso(req: Request, res: Response): Promise<void> {
+  async getByIdModulo(req: Request, res: Response): Promise<void> {
     try {
       const take = req.query.take ? parseInt(req.query.take as string) : undefined;
       const skip = req.query.skip ? parseInt(req.query.skip as string) : undefined;
@@ -24,7 +24,7 @@ export class AulaController extends BaseController<Aula> implements IAulaControl
       const searchFields = this.getSearchFields();
       const include = this.getInclude();
 
-      const data = await this.service.getbyCursos({
+      const data = await this.service.getByIdModulo({
         id,
         take,
         skip,
@@ -42,7 +42,7 @@ export class AulaController extends BaseController<Aula> implements IAulaControl
 
   protected getInclude(): any {
     return {
-      Curso: true,
+      Modulo: true,
     };
   }
 }

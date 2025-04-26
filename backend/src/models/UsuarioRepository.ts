@@ -20,5 +20,5 @@ export class UsuarioRepository extends BaseRepository<Usuario> implements IUsuar
       console.error(`Error on getAll ${prisma.usuario}`, error);
       throw error;
     }
-  }
+    }
 }

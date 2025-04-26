@@ -8,4 +8,14 @@ export class ModuloController extends BaseController<Modulo> implements IModuloC
   constructor() {
     super(new ModuloService());
   }
+
+  protected getSearchFields(): string[] {
+    return ["titulo", "descricao"];
+  }
+
+  protected getInclude(): any {
+    return {
+      Curso: true,
+    };
+  }
 }

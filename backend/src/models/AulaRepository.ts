@@ -3,7 +3,7 @@ import { BaseRepository, IBaseRepository } from "../bases/BaseRepository";
 import { RepositoryException } from "../exceptions/repository-exception";
 
 interface IAulaRepository extends IBaseRepository<Aula> {
-   getItemsByCurso(params?: {
+  getByIdModulo(params?: {
     take?: number;
     skip?: number;
     search?: string;
@@ -19,7 +19,7 @@ export class AulaRepository extends BaseRepository<Aula> implements IAulaReposit
     super(prisma, prisma.aula, 'id_aula');
   }
 
-  async getItemsByCurso(params?: {
+  async getByIdModulo(params?: {
     id: number;
     take?: number;
     skip?: number;
@@ -43,7 +43,7 @@ export class AulaRepository extends BaseRepository<Aula> implements IAulaReposit
   
       const where = {
         AND: [
-          { fk_id_curso: id },
+          { fk_id_modulo: id },
           ...(searchWhere ? [searchWhere] : [])
         ]
       };
