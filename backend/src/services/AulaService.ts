@@ -3,7 +3,7 @@ import { BaseService, IBaseService, PagedResult } from "../bases/BaseService";
 import { AulaRepository } from "../models/AulaRepository";
 
 interface IAulaService extends IBaseService<Aula> {
-  getbyCursos(params?: any): Promise<PagedResult<Aula>>;
+  getByIdModulo(params?: any): Promise<PagedResult<Aula>>;
 }
 
 export class AulaService extends BaseService<Aula> implements IAulaService {
@@ -13,7 +13,7 @@ export class AulaService extends BaseService<Aula> implements IAulaService {
   }
 
 
-  async getbyCursos(params?: any): Promise<PagedResult<Aula>> {
-    return await this.repository2.getItemsByCurso(params);
+  async getByIdModulo(params?: any): Promise<PagedResult<Aula>> {
+    return await this.repository2.getByIdModulo(params);
   }
 }
