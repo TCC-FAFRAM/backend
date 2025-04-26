@@ -10,6 +10,11 @@ app.use(express.json());
 app.use(cors());
 app.use('/api', routes);
 
+app.get('/healthcheck', (req, res) => {
+  var data = new Date();
+  res.status(200).json({ status: `api plataforma de cursos esta online - ${data}` });
+});
+
 // ✅ Middleware de erro no fim
 app.use(errorHandler);
 
