@@ -8,12 +8,12 @@ dotenv.config();
 beforeAll(async () => {
   // Aqui você pode adicionar configurações globais para os testes
   // Por exemplo, configurar um banco de dados de teste, limpar dados, etc.
-  console.log('Configuração global de testes iniciada');
+
 });
 
 // Limpeza global após todos os testes
 afterAll(async () => {
   // Aqui você pode adicionar limpezas globais para os testes
   // Por exemplo, fechar conexões com o banco de dados, limpar dados, etc.
-  console.log('Limpeza global de testes concluída');
+
 }); 

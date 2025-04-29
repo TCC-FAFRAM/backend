@@ -54,6 +54,7 @@ model Curso {
   id_curso        Int              @id @default(autoincrement())
   titulo          String
   descricao       String
+  url_img         String
   Certificados    Certificado[]
   FuncaoCurso     FuncaoCurso[]
   LiberacoesCurso LiberacaoCurso[] @relation("CursoLiberacao")

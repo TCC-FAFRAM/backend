@@ -7,6 +7,6 @@ const prisma = new PrismaClient();
 
 export class LiberacaoCursoRepository extends BaseRepository<LiberacaoCurso> implements ILiberacaoCursoRepository {
   constructor() {
-    super(prisma, prisma.liberacaoCurso);
+    super(prisma, prisma.liberacaoCurso, 'id_liberacao_curso');
   }
 }

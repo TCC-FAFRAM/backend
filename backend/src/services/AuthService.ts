@@ -12,10 +12,7 @@ class AuthService {
     const user = await UserRepository.findByEmail(email);
 
     // Verifica se o usuário existe e se a senha é válida
-    console.log('Usuário encontrado:', user);
-    console.log('Senha recebida:', password);
-    console.log('Senha salva:', user?.senha);
-    console.log('Bcrypt compare:', await bcrypt.compare(password, user?.senha || ''));
+  
     
 
 
