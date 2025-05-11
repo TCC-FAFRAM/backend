@@ -90,12 +90,13 @@ export abstract class BaseController<TypeData> implements IBaseController {
 
   async getById(req: Request, res: Response): Promise<void> {
     try {
-      const id = Number(req.query.id);
+      const id = Number(req.params.id); // ✅ Agora está correto
       const include = this.getInclude(); // opcional
       const item = await this.baseService.getById(id, include);
   
       if (!item) {
-         res.status(404).json({ message: 'Item não encontrado.' });
+        res.status(404).json({ message: 'Item não encontrado.' });
+        return;
       }
   
       res.status(200).json(item);
@@ -103,5 +104,6 @@ export abstract class BaseController<TypeData> implements IBaseController {
       res.status(500).json({ error: (error as Error).message });
     }
   }
+  
   
 }

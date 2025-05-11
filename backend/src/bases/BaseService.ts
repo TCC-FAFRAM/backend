@@ -36,13 +36,10 @@ export abstract class BaseService<TypeData> implements IBaseService<TypeData> {
     return await this.repository.getAllItems(params);
   }
 
-  async getById(id: number): Promise<TypeData | null> {
-    const result = await this.repository.getItemById(id);
-    if (!result) {
-      throw new Error("Error on List by id");
-    }
-    return result;
-  }
+async getById(id: number, include?: any): Promise<TypeData | null> {
+  return await this.repository.getItemById(id, include); 
+}
+
 
   async create(data: any): Promise<TypeData> {
     return await this.repository.createItem(data);

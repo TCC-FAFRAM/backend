@@ -6,8 +6,9 @@ const moduloController = new ModuloController();
 const ModuloRouter = express.Router();
 
 ModuloRouter
-  .get('/', auth, adminOnly, moduloController.getAll)
-  //.get('/:id', auth, adminOnly, liberacaoCursoController.getById);
+  .get('/', auth, moduloController.getAll)
+  .get('/:id', auth, moduloController.getById)
+  .get('/all/:id', auth, moduloController.getModulosByIdCurso)
   .post('/', auth, adminOnly, moduloController.create)
   .put('/:id', auth, adminOnly, moduloController.update)
   .delete('/', auth, adminOnly, moduloController.delete);
