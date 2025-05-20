@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { IBaseService } from "./BaseService";
 
+// base
 export interface IBaseController {
   getAll(req: Request, res: Response): Promise<void>;
   create(req: Request, res: Response): Promise<void>;
