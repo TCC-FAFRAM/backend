@@ -46,7 +46,7 @@ route.use('/usuariofuncao', UsuarioFuncaoRouter);
 route.use('/usuario', UsuarioRouter);
 route.use('/localizacao', DitritoRouter);
 route.use('/fazenda', FazendaRouter);
-route.use('/aulasConcluidas', AulasConcluidasRouter);
+route.use('/aulasconcluidas', AulasConcluidasRouter);
 route.use('/modulo', ModuloRouter);
 route.use('/questao', QuestaoRouter);
 route.use('/respostaQuestao', RespostaQuestaoRouter);

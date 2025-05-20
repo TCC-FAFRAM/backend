@@ -8,7 +8,7 @@ const AulasConcluidasRouter = express.Router();
 AulasConcluidasRouter
   .get('/', auth, adminOnly, aulasConcluidasController.getAll)
   //.get('/:id', auth, adminOnly, aulasConcluidasController.getById);
-  .post('/', auth, adminOnly, aulasConcluidasController.create)
+  .post('/',auth, aulasConcluidasController.create)
   .put('/:id', auth, adminOnly, aulasConcluidasController.update)
   .delete('/', auth, adminOnly, aulasConcluidasController.delete);
 

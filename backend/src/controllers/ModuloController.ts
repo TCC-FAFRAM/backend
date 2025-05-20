@@ -22,7 +22,8 @@ export class ModuloController extends BaseController<Modulo> implements IModuloC
 
   protected getInclude(): any {
     return {
-      Aulas:true
+      Aulas:true,
+      Curso:true
     };
   }
 

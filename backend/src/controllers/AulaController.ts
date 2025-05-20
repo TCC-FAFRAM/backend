@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Aula } from "@prisma/client";
 import { BaseController, IBaseController } from "../bases/BaseController";
 import { AulaService } from "../services/AulaService";
+import { returnSessionUsuario } from "../middleware/sessionUser";
 
 interface IAulaController extends IBaseController {
   getByIdModulo(req: Request, res: Response): Promise<void>;
@@ -15,8 +16,13 @@ export class AulaController extends BaseController<Aula> implements IAulaControl
   }
 
 
+  protected getSearchFields(): string[] {
+    return ["titulo", "descricao"];
+  }
+
   async getByIdModulo(req: Request, res: Response): Promise<void> {
     try {
+      const usuario = returnSessionUsuario(req);
       const take = req.query.take ? parseInt(req.query.take as string) : undefined;
       const skip = req.query.skip ? parseInt(req.query.skip as string) : undefined;
       const search = req.query.search?.toString();
@@ -30,7 +36,8 @@ export class AulaController extends BaseController<Aula> implements IAulaControl
         skip,
         search,
         searchFields,
-        include
+        include,
+        email: usuario.email,
       });
 
       res.status(200).json(data);
@@ -43,6 +50,7 @@ export class AulaController extends BaseController<Aula> implements IAulaControl
   protected getInclude(): any {
     return {
       Modulo: true,
+      AulasConcluidas: true
     };
   }
 }

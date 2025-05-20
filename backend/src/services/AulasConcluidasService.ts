@@ -8,4 +8,6 @@ export class AulasConcluidasService extends BaseService<AulasConcluidas> impleme
   constructor() {
     super(new AulasConcluidasRepository());
   }
+
+  
 }
