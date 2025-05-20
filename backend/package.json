@@ -9,6 +9,9 @@
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage"
   },
+  "engines": {
+    "node": "20.x"
+  },
   "devDependencies": {
     "@prisma/client": "^6.4.1",
     "@types/axios": "^0.14.4",
