@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { Aula } from "@prisma/client";
 import { BaseController, IBaseController } from "../bases/BaseController";
 import { AulaService } from "../services/AulaService";
-import { returnSessionUsuario } from "../middleware/sessionUser";
+import { returnSessionUsuario } from "../middleware/sessionUserMid";
 
 interface IAulaController extends IBaseController {
   getByIdModulo(req: Request, res: Response): Promise<void>;
