@@ -4,8 +4,8 @@ import { LiberacaoCursoService } from "../services/LiberacaoCursoService";
 import { Request, Response } from "express";
 import { ParamsDictionary } from "express-serve-static-core";
 import { ParsedQs } from "qs";
-import { returnSessionUsuario } from "../middleware/sessionUser";
 import { UsuarioService } from "../services/UsuarioService";
+import { returnSessionUsuario } from "../middleware/sessionUserMid";
 
 interface ILiberacaoCursoController extends IBaseController {}
 

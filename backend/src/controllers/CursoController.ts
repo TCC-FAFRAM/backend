@@ -2,7 +2,8 @@ import { Curso } from "@prisma/client";
 import { BaseController, IBaseController } from "../bases/BaseController";
 import { CursoService } from "../services/CursoService";
 import { Request, Response } from "express";
-import { returnSessionUsuario } from "../middleware/sessionUser";
+import { returnSessionUsuario } from "../middleware/sessionUserMid";
+
 
 interface ICursoController extends IBaseController {
   listarCursosDisponiveisParaUsuario(req: Request, res: Response): Promise<void>;
