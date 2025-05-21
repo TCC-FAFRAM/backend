@@ -2,8 +2,9 @@ import { Request, Response } from "express";
 import { AulasConcluidas } from "@prisma/client";
 import { BaseController, IBaseController } from "../bases/BaseController";
 import { AulasConcluidasService } from "../services/AulasConcluidasService";
-import { returnSessionUsuario } from "../middleware/sessionUser";
+
 import { PrismaClient } from "@prisma/client";
+import { returnSessionUsuario } from "../middleware/sessionUserMid";
 
 const prisma = new PrismaClient();
 
