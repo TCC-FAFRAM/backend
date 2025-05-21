@@ -7,7 +7,7 @@ import { returnSessionUsuario } from "../middleware/sessionUser";
 interface IAulaController extends IBaseController {
   getByIdModulo(req: Request, res: Response): Promise<void>;
 }
-
+// teste
 export class AulaController extends BaseController<Aula> implements IAulaController {
   service = new AulaService();
   constructor() {
