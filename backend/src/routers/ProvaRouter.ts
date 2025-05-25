@@ -6,8 +6,8 @@ const provaController = new ProvaController();
 const ProvaRouter = express.Router();
 
 ProvaRouter
-  .get('/', auth, adminOnly, provaController.getAll)
-  //.get('/:id', auth, adminOnly, provaController.getById);
+  .get('/', auth, provaController.getAll)
+  .get('/:id', auth, provaController.getByModuloId)
   .post('/', auth, adminOnly, provaController.create)
   .put('/:id', auth, adminOnly, provaController.update)
   .delete('/', auth, adminOnly, provaController.delete);

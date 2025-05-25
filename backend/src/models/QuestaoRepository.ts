@@ -9,4 +9,11 @@ export class QuestaoRepository extends BaseRepository<Questao> implements IQuest
   constructor() {
     super(prisma, prisma.questao, 'id_questao');
   }
+
+   async findByProvaId(idProva: number): Promise<Questao[]> {
+    return await this.model.findMany({
+      where: { fk_id_prova: idProva },
+      include: { Prova: true },
+    });
+  }
 }

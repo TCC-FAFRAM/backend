@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Modulo } from "@prisma/client";
 import { BaseController, IBaseController } from "../bases/BaseController";
 import { ModuloService } from "../services/ModuloService";
+import { returnSessionUsuario } from "../middleware/sessionUserMid";
 
 interface IModuloController extends IBaseController {
 getModulosByIdCurso(req: Request, res: Response): Promise<void>;
@@ -29,6 +30,7 @@ export class ModuloController extends BaseController<Modulo> implements IModuloC
 
   async getModulosByIdCurso(req: Request, res: Response): Promise<void> {
     try {
+      var email = returnSessionUsuario(req).email;
       const take = req.query.take ? parseInt(req.query.take as string) : undefined;
       const skip = req.query.skip ? parseInt(req.query.skip as string) : undefined;
       const search = req.query.search?.toString();
@@ -39,12 +41,14 @@ export class ModuloController extends BaseController<Modulo> implements IModuloC
 
       const data = await this.service.getByIdCurso({
         id,
+        email,
         take,
         skip,
         search,
         searchFields,
         include
       });
+
 
       res.status(200).json(data);
     } catch (error: any) {
