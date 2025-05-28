@@ -12,7 +12,6 @@ export class ProvaService extends BaseService<Prova> implements IProvaService {
   }
 
     async buscarPorModuloId(idModulo: number): Promise<Prova[]> {
-    // @ts-ignore
     return (this.repository as ProvaRepository).findByModuloId(idModulo);
   }
 }

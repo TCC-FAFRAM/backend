@@ -9,4 +9,5 @@ export class RespostaQuestaoRepository extends BaseRepository<RespostaQuestao> i
   constructor() {
     super(prisma, prisma.respostaQuestao, 'id_resposta');
   }
+
 }
