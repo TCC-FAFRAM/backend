@@ -8,4 +8,20 @@ export class FazendaController extends BaseController<Fazenda> implements IFazen
   constructor() {
     super(new FazendaService());
   }
+
+
+
+protected getSearchFields(): string[] {
+    return ["nome"];
+  }
+
+protected getInclude(): any {
+  return {
+    Municipio: true,
+    Distrito: true
+  };
 }
+}
+
+
+

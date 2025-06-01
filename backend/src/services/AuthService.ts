@@ -11,11 +11,6 @@ class AuthService {
   ): Promise<{ user: Usuario; token: string; refreshToken: string }> {
     const user = await UserRepository.findByEmail(email);
 
-    // Verifica se o usuário existe e se a senha é válida
-  
-    
-
-
     if (!user || !user.senha || !(await bcrypt.compare(password, user.senha))) {
       throw new Error('Credenciais inválidas');
     }

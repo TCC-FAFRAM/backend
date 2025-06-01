@@ -1,43 +1,59 @@
 import { Request, Response } from 'express';
 import { DistritoService } from '../services/DistritoService';
+import { MunicipiosService } from '../services/MunicipioService';
+import { EstadoService } from '../services/EstadoService';
+import { BaseController, IBaseController } from '../bases/BaseController';
+import { Estado } from '@prisma/client';
 
-export class LocalizacaoController {
-  private readonly distritoService: DistritoService;
+interface IEstadoController extends IBaseController {}
+
+export class LocalizacaoController extends BaseController<Estado> implements IEstadoController {
+  private readonly distritoService = new DistritoService();
+  private readonly municipioService = new MunicipiosService();
+
 
   constructor() {
-    this.distritoService = new DistritoService();
-
-    this.getUFs = this.getUFs.bind(this);
-    this.getMunicipios = this.getMunicipios.bind(this);
-    this.getDistritos = this.getDistritos.bind(this);
+    super(new EstadoService()); 
+    this.getMunicipiosPorEstado = this.getMunicipiosPorEstado.bind(this);
+    this.getDistritosPorMunicipio = this.getDistritosPorMunicipio.bind(this);
   }
 
-  async getUFs(req: Request, res: Response) {
-    try {
-      const estados = await this.distritoService.listarUFs();
-      res.json(estados);
-    } catch (error) {
-      res.status(500).json({ error: 'Erro ao listar UFs' });
+
+    protected getSearchFields(): string[] {
+    return ["nome"];
+  }
+
+protected getInclude(): any {
+  return {
+    Municipios: {
+      include: {
+        Distritos: true,
+      }
     }
-  }
+  };
+}
 
-  async getMunicipios(req: Request, res: Response) {
+
+
+  // GET /estados/:id_estado/municipios
+  async getMunicipiosPorEstado(req: Request, res: Response) {
     const { uf } = req.params;
     try {
-      const municipios = await this.distritoService.listarMunicipiosPorUF(uf);
-      res.json(municipios);
+      const result = await this.municipioService.listarPorEstado(Number(uf));
+      res.json(result);
     } catch (error) {
-      res.status(500).json({ error: 'Erro ao listar municípios' });
+      res.status(500).json({ error: "Erro ao buscar municípios" });
     }
   }
 
-  async getDistritos(req: Request, res: Response) {
-    const { idMunicipio } = req.params;
+  // GET /municipios/:id_municipio/distritos
+  async getDistritosPorMunicipio(req: Request, res: Response) {
+    const { id_municipio } = req.params;
     try {
-      const distritos = await this.distritoService.listarDistritosPorMunicipio(idMunicipio);
-      res.json(distritos);
+      const result = await this.distritoService.listarPorMunicipio(Number(id_municipio));
+      res.json(result);
     } catch (error) {
-      res.status(500).json({ error: 'Erro ao listar distritos' });
+      res.status(500).json({ error: "Erro ao buscar distritos" });
     }
   }
 }

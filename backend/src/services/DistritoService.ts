@@ -1,27 +1,22 @@
-import axios from 'axios';
+import { Distrito } from "@prisma/client";
+import { BaseService, IBaseService } from "../bases/BaseService";
+import { DistritoRepository } from "../models/DistritoRepository";
 
-export class DistritoService {
-  async listarUFs() {
-    const { data } = await axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados');
-    return data.map((estado: any) => ({
-      label: estado.nome,
-      value: estado.sigla
-    }));
+interface IDistritoService extends IBaseService<Distrito> {}
+
+export class DistritoService extends BaseService<Distrito> implements IDistritoService {
+  private DistritoRepository: DistritoRepository;
+
+  constructor() {
+    const repository = new DistritoRepository();
+    super(repository);
+    this.DistritoRepository = repository;
   }
 
-  async listarMunicipiosPorUF(uf: string) {
-    const { data } = await axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios`);
-    return data.map((municipio: any) => ({
-      label: municipio.nome,
-      value: municipio.id
-    }));
-  }
-
-  async listarDistritosPorMunicipio(idMunicipio: string) {
-    const { data } = await axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/municipios/${idMunicipio}/distritos`);
-    return data.map((distrito: any) => ({
-      label: distrito.nome,
-      value: distrito.id
-    }));
+  // NOVO: Listar distritos de um município (id_municipio)
+  async listarPorMunicipio(id_municipio: number) {
+    return this.getAll({
+      where: { fk_id_municipio: id_municipio },
+    });
   }
 }

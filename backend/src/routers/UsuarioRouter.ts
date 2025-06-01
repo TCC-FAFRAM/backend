@@ -8,7 +8,7 @@ const UsuarioRouter = express.Router();
 UsuarioRouter
   .get('/', auth, adminOnly, usuarioController.getAll)
   //.get('/:id', auth, adminOnly, usuarioController.getById);
-  .post('/', auth, adminOnly, usuarioController.create)
+  .post('/', usuarioController.create)
   .put('/:id', auth, adminOnly, usuarioController.update)
   .delete('/', auth, adminOnly, usuarioController.delete);
 

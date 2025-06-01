@@ -7,6 +7,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// NOVOS MODELS DE LOCALIZAÇÃO
+
+model Estado {
+  id_estado   Int         @id @default(autoincrement())
+  nome        String
+  sigla       String      @unique
+  Municipios  Municipio[]
+}
+
+model Municipio {
+  id_municipio  Int        @id @default(autoincrement())
+  nome          String
+  fk_id_estado  Int
+  Estado        Estado     @relation(fields: [fk_id_estado], references: [id_estado], onDelete: Cascade)
+  Distritos     Distrito[]
+  Usuarios      Usuario[]
+  Fazendas      Fazenda[]
+}
+
+model Distrito {
+  id_distrito     Int         @id @default(autoincrement())
+  nome            String
+  fk_id_municipio Int
+  Municipio       Municipio   @relation(fields: [fk_id_municipio], references: [id_municipio], onDelete: Cascade)
+  Usuarios        Usuario[]
+  Fazendas        Fazenda[]
+}
+
+// MODELS DO SEU SISTEMA
+
 model Usuario {
   id_usuario                 Int                @id @default(autoincrement())
   nome                       String
@@ -21,14 +51,21 @@ model Usuario {
   distrito_id                Int?
   municipio_id               Int?
   complemento                String?
+
+  // RELACIONAMENTOS COM CASCADE
+  Fazenda                    Fazenda?           @relation(fields: [fk_id_fazenda], references: [id_fazenda], onDelete: Cascade)
+  Funcao                     Funcao?            @relation(fields: [fk_id_funcao], references: [id_funcao], onDelete: Cascade)
+  Municipio                  Municipio?         @relation(fields: [municipio_id], references: [id_municipio], onDelete: Cascade)
+  Distrito                   Distrito?          @relation(fields: [distrito_id], references: [id_distrito], onDelete: Cascade)
+
+  // OUTROS RELACIONAMENTOS
   AulasConcluidas            AulasConcluidas[]
   Certificados               Certificado[]
   CursosConcluidos           CursosConcluidos[]
   LiberacoesCursoAdmin       LiberacaoCurso[]   @relation("AdminLiberacao")
   LiberacoesCursoFuncionario LiberacaoCurso[]   @relation("FuncionarioLiberacao")
   TentativasProva            TentativasProva[]
-  Fazenda                    Fazenda?           @relation(fields: [fk_id_fazenda], references: [id_fazenda])
-  Funcao                     Funcao?            @relation(fields: [fk_id_funcao], references: [id_funcao])
+  CiclosModulo               CicloModulo[]
 }
 
 model Fazenda {
@@ -39,6 +76,9 @@ model Fazenda {
   distrito_id  Int?
   municipio_id Int?
   complemento  String?
+
+  Municipio    Municipio?   @relation(fields: [municipio_id], references: [id_municipio], onDelete: Cascade)
+  Distrito     Distrito?    @relation(fields: [distrito_id], references: [id_distrito], onDelete: Cascade)
   Usuarios     Usuario[]
 }
 
@@ -69,19 +109,34 @@ model Modulo {
   concluido             Boolean           @default(false)
   fk_id_curso           Int
   fk_id_modulo_anterior Int?
+
+  Curso                 Curso             @relation(fields: [fk_id_curso], references: [id_curso], onDelete: Cascade)
+  ModuloAnterior        Modulo?           @relation("ModuloSequencia", fields: [fk_id_modulo_anterior], references: [id_modulo], onDelete: Cascade)
+  ModulosPosteriores    Modulo[]          @relation("ModuloSequencia")
+
   Aulas                 Aula[]
   aulas_concluidas      AulasConcluidas[]
-  Curso                 Curso             @relation(fields: [fk_id_curso], references: [id_curso])
-  ModuloAnterior        Modulo?           @relation("ModuloSequencia", fields: [fk_id_modulo_anterior], references: [id_modulo])
-  ModulosPosteriores    Modulo[]          @relation("ModuloSequencia")
+  CiclosModulo          CicloModulo[]
   Prova                 Prova?
+}
+
+model CicloModulo {
+  id_ciclo_modulo    Int      @id @default(autoincrement())
+  fk_id_usuario      Int
+  fk_id_modulo       Int
+  concluido_em       DateTime @default(now())
+
+  Usuario            Usuario  @relation(fields: [fk_id_usuario], references: [id_usuario], onDelete: Cascade)
+  Modulo             Modulo   @relation(fields: [fk_id_modulo], references: [id_modulo], onDelete: Cascade)
+  TentativasProva    TentativasProva[]
 }
 
 model FuncaoCurso {
   fk_id_funcao Int
   fk_id_curso  Int
-  Curso        Curso  @relation(fields: [fk_id_curso], references: [id_curso])
-  Funcao       Funcao @relation(fields: [fk_id_funcao], references: [id_funcao])
+
+  Curso        Curso  @relation(fields: [fk_id_curso], references: [id_curso], onDelete: Cascade)
+  Funcao       Funcao @relation(fields: [fk_id_funcao], references: [id_funcao], onDelete: Cascade)
 
   @@id([fk_id_funcao, fk_id_curso])
 }
@@ -93,7 +148,8 @@ model Aula {
   duracao          Int
   descricao        String?
   fk_id_modulo     Int
-  Modulo           Modulo             @relation(fields: [fk_id_modulo], references: [id_modulo])
+
+  Modulo           Modulo             @relation(fields: [fk_id_modulo], references: [id_modulo], onDelete: Cascade)
   AulasConcluidas  AulasConcluidas[]
   CursosConcluidos CursosConcluidos[]
 }
@@ -103,8 +159,9 @@ model CursosConcluidos {
   fk_id_usuario Int
   fk_id_aula    Int
   completado_em DateTime @default(now())
-  Aula          Aula     @relation(fields: [fk_id_aula], references: [id_aula])
-  Usuario       Usuario  @relation(fields: [fk_id_usuario], references: [id_usuario])
+
+  Aula          Aula     @relation(fields: [fk_id_aula], references: [id_aula], onDelete: Cascade)
+  Usuario       Usuario  @relation(fields: [fk_id_usuario], references: [id_usuario], onDelete: Cascade)
 }
 
 model Certificado {
@@ -114,7 +171,8 @@ model Certificado {
   data_emissao    DateTime          @default(now())
   url_certificado String
   status          StatusCertificado @default(INATIVO)
-  Curso           Curso             @relation(fields: [fk_id_curso], references: [id_curso])
+
+  Curso           Curso             @relation(fields: [fk_id_curso], references: [id_curso], onDelete: Cascade)
   Usuario         Usuario           @relation(fields: [fk_id_usuario], references: [id_usuario], onDelete: Cascade)
 }
 
@@ -123,7 +181,8 @@ model Prova {
   nota_minima     Float
   total_perguntas Int
   fk_id_modulo    Int               @unique
-  Modulo          Modulo            @relation(fields: [fk_id_modulo], references: [id_modulo])
+
+  Modulo          Modulo            @relation(fields: [fk_id_modulo], references: [id_modulo], onDelete: Cascade)
   Questoes        Questao[]
   TentativasProva TentativasProva[]
 }
@@ -135,7 +194,8 @@ model Questao {
   resposta_correta Int
   peso             Int
   fk_id_prova      Int
-  Prova            Prova             @relation(fields: [fk_id_prova], references: [id_prova])
+
+  Prova            Prova             @relation(fields: [fk_id_prova], references: [id_prova], onDelete: Cascade)
   RespostasAluno   RespostaQuestao[]
 }
 
@@ -144,8 +204,9 @@ model RespostaQuestao {
   fk_id_questao   Int
   fk_id_tentativa Int
   resposta_aluno  Int
-  Questao         Questao         @relation(fields: [fk_id_questao], references: [id_questao])
-  TentativaProva  TentativasProva @relation(fields: [fk_id_tentativa], references: [id_tentativa_prova])
+
+  Questao         Questao         @relation(fields: [fk_id_questao], references: [id_questao], onDelete: Cascade)
+  TentativaProva  TentativasProva @relation(fields: [fk_id_tentativa], references: [id_tentativa_prova], onDelete: Cascade)
 }
 
 model TentativasProva {
@@ -155,9 +216,12 @@ model TentativasProva {
   nota               Float
   data_tentativa     DateTime          @default(now())
   passou             Boolean
+  fk_id_ciclo_modulo Int
+
+  Usuario            Usuario           @relation(fields: [fk_id_funcionario], references: [id_usuario], onDelete: Cascade)
+  Prova              Prova             @relation(fields: [fk_id_prova], references: [id_prova], onDelete: Cascade)
+  CicloModulo        CicloModulo       @relation(fields: [fk_id_ciclo_modulo], references: [id_ciclo_modulo], onDelete: Cascade)
   Respostas          RespostaQuestao[]
-  Usuario            Usuario           @relation(fields: [fk_id_funcionario], references: [id_usuario])
-  Prova              Prova             @relation(fields: [fk_id_prova], references: [id_prova])
 }
 
 model LiberacaoCurso {
@@ -166,9 +230,10 @@ model LiberacaoCurso {
   fk_id_curso        Int
   fk_id_admin        Int
   data_liberacao     DateTime @default(now())
-  Admin              Usuario  @relation("AdminLiberacao", fields: [fk_id_admin], references: [id_usuario])
-  Curso              Curso    @relation("CursoLiberacao", fields: [fk_id_curso], references: [id_curso])
-  Funcionario        Usuario  @relation("FuncionarioLiberacao", fields: [fk_id_funcionario], references: [id_usuario])
+
+  Admin              Usuario  @relation("AdminLiberacao", fields: [fk_id_admin], references: [id_usuario], onDelete: Cascade)
+  Curso              Curso    @relation("CursoLiberacao", fields: [fk_id_curso], references: [id_curso], onDelete: Cascade)
+  Funcionario        Usuario  @relation("FuncionarioLiberacao", fields: [fk_id_funcionario], references: [id_usuario], onDelete: Cascade)
 }
 
 model Log {
@@ -187,9 +252,10 @@ model AulasConcluidas {
   fk_id_aula        Int
   completado_em     DateTime @default(now())
   moduloId_modulo   Int?
-  Aula              Aula     @relation(fields: [fk_id_aula], references: [id_aula])
-  Usuario           Usuario  @relation(fields: [fk_id_usuario], references: [id_usuario])
-  Modulo            Modulo?  @relation(fields: [moduloId_modulo], references: [id_modulo])
+
+  Aula              Aula     @relation(fields: [fk_id_aula], references: [id_aula], onDelete: Cascade)
+  Usuario           Usuario  @relation(fields: [fk_id_usuario], references: [id_usuario], onDelete: Cascade)
+  Modulo            Modulo?  @relation(fields: [moduloId_modulo], references: [id_modulo], onDelete: Cascade)
 }
 
 enum Role {
@@ -205,4 +271,3 @@ enum StatusCertificado {
   APROVADO
   RECEBIDO
 }
-    

@@ -6,8 +6,8 @@ import { auth } from '../middleware/auth';
 const DitritoRouter = express.Router();
 const controller = new LocalizacaoController();
 
-DitritoRouter.get('/uf', auth, controller.getUFs)
-  .get('/:uf/municipios', auth, controller.getMunicipios)
-  .get('/:idMunicipio/distritos', auth, controller.getDistritos);
+DitritoRouter.get('/uf',  controller.getAll)
+  .get('/:uf/municipios',  controller.getMunicipiosPorEstado)
+  .get('/:idMunicipio/distritos', controller.getDistritosPorMunicipio);
 
 export default DitritoRouter;

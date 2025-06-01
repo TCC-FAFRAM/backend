@@ -6,7 +6,7 @@ const funcaoController = new FuncaoController();
 const FuncaoRouter = express.Router();
 
 FuncaoRouter
-  .get('/', auth, adminOnly, funcaoController.getAll)
+  .get('/', funcaoController.getAll)
   //.get('/:id', auth, adminOnly, funcaoController.getById);
   .post('/', auth, adminOnly, funcaoController.create)
   .put('/:id', auth, adminOnly, funcaoController.update)
