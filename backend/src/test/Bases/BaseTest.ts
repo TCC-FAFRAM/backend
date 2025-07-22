@@ -5,13 +5,13 @@ import errorHandler from '../../middleware/exception';
 import routes from '../../routers';
 
 /**
- * Classe abstrata BaseTest que serve como base para os testes
+ * Classe BaseTest que serve como base para os testes
  * Gerenciando a instanciação do servidor e fornecendo métodos para testar os controllers
  */
-export abstract class BaseTest {
+export class BaseTest {
   protected app: Express;
   protected server: Server;
-  protected request: SuperTest<Test>;
+  public request: SuperTest<Test>;
   protected baseUrl: string;
 
   /**

@@ -7,7 +7,12 @@
     "migrate": "npx prisma migrate dev && psql -h 127.0.0.1 -U postgres -d platform_education -f prisma/sql/trigger_log.sql",
     "test": "vitest",
     "test:watch": "vitest --watch",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage",
+    "test:all": "node src/test/run-all-tests.js --all",
+    "test:specific": "node src/test/run-all-tests.js --specific",
+    "test:endpoints": "vitest --run src/test/AllEndpointsTest.spec.ts",
+    "setup:env": "node setup-env.js",
+    "setup": "npm run setup:env && npm install && npm run migrate"
   },
   "engines": {
     "node": "20.x"
